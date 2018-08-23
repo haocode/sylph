@@ -34,6 +34,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * RunnerManager
+ *
  */
 public class RunnerManager
 {
@@ -49,7 +50,7 @@ public class RunnerManager
     }
 
     public void createRunner(RunnerFactory factory)
-    {
+    {                                   //::调用pluginLoader对象方法
         RunnerContext runnerContext = pluginLoader::getPluginsInfo;
         logger.info("===== Runner: {} starts loading {} =====", factory.getClass().getName(), PipelinePlugin.class.getName());
 

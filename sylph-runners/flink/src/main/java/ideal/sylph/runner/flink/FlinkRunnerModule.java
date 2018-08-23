@@ -22,21 +22,27 @@ import java.util.stream.Stream;
 import static ideal.sylph.runner.flink.FlinkRunner.FLINK_DIST;
 import static ideal.sylph.spi.exception.StandardErrorCode.CONFIG_ERROR;
 import static java.util.Objects.requireNonNull;
-
+//这个FlinkRunnerModule 得到运行相关关联对象
+//其实对于Guice而言，程序员所要做的，只是创建一个代表关联关系的Module，然后使用这个Module即可得到对应关联的对象。因此，主要的问题其实就是在如何关联实现类和接口（子类和父类）。
 public class FlinkRunnerModule
         implements Module
 {
+    //在自定义的Module类中进行绑定 在configure方法中绑定 链式绑定 在 Guice 中 Providers 就像 Factories 一样创建和返回对象
+    //在使用基于@Provides方法绑定的过程中，如果方法中创建对象的过程很复杂，我们就会考虑，是不是可以把它独立出来，形成一个专门作用的类。Guice提供了一个接口
+    //使用toProvider方法来把一种类型绑定到具体的Provider类。当需要相应类型的对象时，Provider类就会调用其get方法获取所需的对象
     @Override
     public void configure(Binder binder)
-    {
+    {   //:: 相当于set方法 把 loadYarnConfiguration 对象属性赋值给   FlinkRunnerModule 对象
         binder.bind(YarnConfiguration.class).toProvider(FlinkRunnerModule::loadYarnConfiguration).in(Scopes.SINGLETON);
         binder.bind(YarnClient.class).toProvider(YarnClientProvider.class).in(Scopes.SINGLETON);
         binder.bind(YarnClusterConfiguration.class).toProvider(YarnClusterConfigurationProvider.class).in(Scopes.SINGLETON);
     }
+    //在 Guice 中 Providers 就像 Factories 一样创建和返回对象。在大部分情况下，客户端可以直接依赖 Guice 框架来为服务（Services）创建依赖的对象。但是少数情况下，应用程序代码需要为一个特定的类型定制对象创建流程（Object creation process），这样可以控制对象创建的数量，提供缓存（Cache）机制等，这样的话我们就要依赖 Guice 的 Provider 类。
 
     private static class YarnClientProvider
             implements Provider<YarnClient>
     {
+        //@Inject，是表示对容器说，这里的YarnConfiguration需要注射，等到运行的时候，容器会拿来一个实例给YarnConfiguration，完成注射的过程
         @Inject private YarnConfiguration yarnConfiguration;
 
         @Override
@@ -92,7 +98,7 @@ public class FlinkRunnerModule
         //        }
         return yarnConf;
     }
-
+    //获取额外的依赖jar包
     private static File getFlinkJarFile()
     {
         String flinkHome = requireNonNull(System.getenv("FLINK_HOME"), "FLINK_HOME env not setting");

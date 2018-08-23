@@ -38,7 +38,9 @@ public class SylphContextImpl
         requireNonNull(jobId, "jobId is null");
         requireNonNull(flowString, "flowString is null");
         requireNonNull(actuatorName, "actuatorName is null");
+        // 调用 runnerManger 类的方法 返回job相关信息
         Job job = runnerManger.formJobWithFlow(jobId, flowString.getBytes(UTF_8), actuatorName);
+        //最终调用 jobStore.saveJob  存储job相关信息
         jobManager.saveJob(job);
     }
 

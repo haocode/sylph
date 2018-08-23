@@ -100,7 +100,7 @@ public final class JobManager
     private final ConcurrentMap<String, JobContainer> runningContainers = new ConcurrentHashMap<>();
 
     private boolean run;
-
+//启动任务
     private final Thread monitorService = new Thread(() -> {
         while (run) {
             runningContainers.forEach((jobId, container) -> {

@@ -35,6 +35,8 @@ import java.util.stream.Collectors;
 import static ideal.sylph.spi.exception.StandardErrorCode.JOB_BUILD_ERROR;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
+//flink stream sql 真正执行类
+
 
 @Name("StreamSql")
 @Description("this is flink stream sql etl Actuator")
@@ -91,6 +93,8 @@ public class FlinkStreamSqlActuator
                                 k -> k.getName().getValue(),
                                 v -> v.getValue().toString().replace("'", ""))
                         );
+
+                //获取输出类型 根据指定的type 加载插件
                 String driverString = requireNonNull(withConfig.get("type"), "driver is null");
                 Optional<PipelinePluginManager.PipelinePluginInfo> pluginInfo = pluginManager.findPluginInfo(driverString);
                 pluginInfo.ifPresent(plugin -> FileUtils.listFiles(plugin.getPluginFile(), null, true).forEach(builder::add));
@@ -100,7 +104,7 @@ public class FlinkStreamSqlActuator
         //----- compile --
         final int parallelism = 2;
         JobGraph jobGraph = compile(pluginManager, parallelism, sqlText, jobClassLoader);
-        //----------------设置状态----------------
+        //----------------设置状态资源----------------
         JobParameter jobParameter = new JobParameter()
                 .queue("default")
                 .taskManagerCount(2) //-yn 注意是executer个数
@@ -118,6 +122,7 @@ public class FlinkStreamSqlActuator
         JVMLauncher<JobGraph> launcher = JVMLaunchers.<JobGraph>newJvm()
                 .setConsole(System.out::println)
                 .setCallable(() -> {
+                    //任务提交运行
                     System.out.println("************ job start ***************");
                     StreamExecutionEnvironment execEnv = StreamExecutionEnvironment.createLocalEnvironment();
                     execEnv.setParallelism(parallelism);
@@ -125,6 +130,7 @@ public class FlinkStreamSqlActuator
                     SqlParser sqlParser = new SqlParser();
                     for (String sql : sqlText.split(";")) {
                         if (sql.toLowerCase().contains("create ") && sql.toLowerCase().contains(" table ")) {
+                            //如果包含建表语句建表操作
                             StreamSqlUtil.runCreateTableSql(pluginManager, tableEnv, sqlParser, sql);
                         }
                         else {

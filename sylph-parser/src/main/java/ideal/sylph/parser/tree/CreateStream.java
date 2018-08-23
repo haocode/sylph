@@ -1,5 +1,5 @@
 package ideal.sylph.parser.tree;
-
+//建表语句解析
 import com.google.common.collect.ImmutableList;
 
 import java.util.List;

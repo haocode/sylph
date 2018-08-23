@@ -33,16 +33,22 @@ import static ideal.sylph.spi.job.Job.Status.STOP;
 import static java.util.Objects.requireNonNull;
 
 @javax.inject.Singleton
+//@javax.ws.rs.PathParam： 从URI模板参数中提取数据
 @Path("/job_manger")
 public class JobMangerResurce
 {
     private static final Logger logger = LoggerFactory.getLogger(JobMangerResurce.class);
 
     @Context private ServletContext servletContext;
+
+    //@javax.ws.rs.core.Context 注释指示注入了上下文对象。javax.ws.rs.core.UriInfo 接口是您要注入的对象的接口。 您可以利用 UriBuilder 类，使用 UriInfo 对象来构建绝对和相对 URL。
     @Context private UriInfo uriInfo;
     private SylphContext sylphContext;
 
     public JobMangerResurce(
+            //@javax.ws.rs.core.Context 通用的注入annotation，允许注入各种帮助或者信息对象
+            //有时候可能想通过程序的方式获取URI中的信息，而不使用PathParam注释。这里我们需要通过接口javax.ws.rs.core.UriInfo接口去获取这些信息
+            // 要获取UriInfo对象，就需要用到@javax.ws.rs.core.Context注释了
             @Context ServletContext servletContext,
             @Context UriInfo uriInfo)
     {
@@ -53,7 +59,9 @@ public class JobMangerResurce
 
     @Path("/get_all_actuators")
     @GET
+    //Produces 标注返回的MIME媒体类型
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    // @QueryParam("id")    获取参数上的参数
     public List<String> getAllActuators(@QueryParam("name") String name)
     {
         //test Object a1 = uriInfo.getQueryParameters();
@@ -62,6 +70,7 @@ public class JobMangerResurce
     }
 
     @POST
+    //Consumes 标注可接受请求的MIME媒体类型
     @Consumes({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     @Produces({MediaType.APPLICATION_JSON})
     public Map doPostHandler(Body body)
@@ -99,7 +108,8 @@ public class JobMangerResurce
                 line.put("jobId", jobId);
                 line.put("type", job.getActuatorName());
                 line.put("create_time", 0);  //getUserModuleManger().getCount("action")
-
+                //isPresent() 与 obj != null 无任何分别
+                //Optional<JobContainer>
                 jobContainer.ifPresent(container -> {
                     line.put("yarnId", container.getRunId());
                     line.put("status", container.getStatus());
@@ -114,7 +124,9 @@ public class JobMangerResurce
             throw new RuntimeException(Throwables.getRootCause(e));
         }
     }
-
+    //接口的数据我无法完全的预知，所以实体类字段有可能不完整。所以当返回的json数据里包含了实体类没有的字段时gson就有可能出错
+    //@JsonIgnoreProperties(ignoreUnknown = true)，将这个注解写在类上之后，就会忽略类中不存在的字段，可以满足当前的需要。这个注解还可以指定要忽略的字段
+    //Body 请求的实体类
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Body
     {

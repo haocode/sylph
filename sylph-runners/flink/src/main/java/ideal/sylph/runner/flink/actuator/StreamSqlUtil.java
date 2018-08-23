@@ -48,6 +48,7 @@ public class StreamSqlUtil
                 .put("tableName", tableName)
                 .build();
         NodeLoader<StreamTableEnvironment, DataStream<Row>> loader = new FlinkNodeLoader(pluginManager);
+        //解析建表字段
         RowTypeInfo rowTypeInfo = parserColumns(columns);
         if (SOURCE == createStream.getType()) {  //Source.class.isAssignableFrom(driver)
             UnaryOperator<DataStream<Row>> inputStream = loader.loadSource(tableEnv, config);
@@ -64,7 +65,7 @@ public class StreamSqlUtil
             throw new IllegalArgumentException("this driver class " + withConfig.get("type") + " have't support!");
         }
     }
-
+    //解析create table 的字段
     private static RowTypeInfo parserColumns(List<ColumnDefinition> columns)
     {
         String[] fieldNames = columns.stream().map(columnDefinition -> columnDefinition.getName().getValue())
@@ -75,7 +76,7 @@ public class StreamSqlUtil
 
         return new RowTypeInfo(fieldTypes, fieldNames);
     }
-
+    //解析create table 的字段的类型
     private static TypeInformation<?> parserSqlType(String type)
     {
         switch (type) {

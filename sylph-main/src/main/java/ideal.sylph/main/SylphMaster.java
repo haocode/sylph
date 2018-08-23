@@ -32,8 +32,9 @@ public final class SylphMaster
             Injector injector = new Bootstrap(modules).strictConfig().requireExplicitBindings(false).initialize();
             injector.getInstance(PipelinePluginLoader.class).loadPlugins();
             injector.getInstance(RunnerLoader.class).loadPlugins();
+            //JobStore 实现类LocalJobStore 实现job 的管理  获取job 增减job
             injector.getInstance(JobStore.class).loadJobs();
-
+            //JobManager，上下线提交job
             injector.getInstance(JobManager.class).start();
             injector.getInstance(ControllerApp.class).start();
             //ProcessHandle.current().pid()

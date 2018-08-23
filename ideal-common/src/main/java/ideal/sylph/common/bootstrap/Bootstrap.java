@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
+//初始化类
 public final class Bootstrap
 {
     private static final Logger logger = LoggerFactory.getLogger(Bootstrap.class);
@@ -87,10 +87,13 @@ public final class Bootstrap
 
         Map<String, String> requiredProperties = new TreeMap<>();
         if (requiredConfigurationProperties == null) {
+            //sylph.properties -Dconfig 加载配置
             String configFile = System.getProperty("config");
             requiredProperties.putAll(loader.loadPropertiesFrom(configFile));
         }
         //--------build: allProperties = required + optional + jvmProperties
+        // TreeMap 是一个有序的key-value集合，它是通过红黑树实现的 TreeMap 实现了Cloneable接口，意味着它能被克隆。  它支持序列化
+        //TreeMap 默认排序规则：按照key的字典顺序来排序
         Map<String, String> allProperties = new TreeMap<>(requiredProperties);
         if (optionalConfigurationProperties != null) {
             allProperties.putAll(optionalConfigurationProperties);
@@ -103,6 +106,12 @@ public final class Bootstrap
         TreeMap<String, String> unusedProperties = new TreeMap<>(requiredProperties);
         unusedProperties.keySet().removeAll(configurationFactory.getUsedProperties());
         //----
+        ////不可变集合，顾名思义就是说集合是不可被修改的。集合的数据项是在创建的时候提供，并且在整个生命周期中都不可改变 线程安全的：immutable对象在多线程下安全，没有竞态条件
+        //immutable对象可以很自然地用作常量
+        //一个immutable集合可以有以下几种方式来创建：
+        //　　1.用copyOf方法, 譬如, ImmutableSet.copyOf(set)
+        //　　2.使用of方法，譬如，ImmutableSet.of("a", "b", "c")或者ImmutableMap.of("a", 1, "b", 2)
+        //　　3.使用Builder类
         ImmutableList.Builder<Module> moduleList = ImmutableList.builder();
         moduleList.add(new ConfigurationModule(configurationFactory));
         if (!messages.isEmpty()) {
@@ -116,6 +125,7 @@ public final class Bootstrap
             moduleList.add(Binder::requireExplicitBindings);
         }
         if (this.strictConfig) {
+            //对于没有使用到的配置项报错出来
             moduleList.add((binder) -> {
                 for (Map.Entry<String, String> unusedProperty : unusedProperties.entrySet()) {
                     binder.addError("Configuration property '%s' was not used", unusedProperty.getKey());
@@ -124,6 +134,7 @@ public final class Bootstrap
         }
 
         moduleList.addAll(this.modules);
+        //继承 AbstractModule 重写 configure 方法。在该方法中调用 bind() 便创建了一个binding。完成module之后，调用 Guice.createInjector(),将module作为参数传入，便可获得一个injector对象
         return Guice.createInjector(Stage.PRODUCTION, moduleList.build());
     }
 }

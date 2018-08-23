@@ -37,6 +37,8 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 import static ideal.sylph.spi.exception.StandardErrorCode.JOB_BUILD_ERROR;
 import static java.util.Objects.requireNonNull;
 
+
+
 @Name("StreamETL")
 @Description("this is stream etl Actuator")
 public class FlinkStreamEtlActuator
@@ -72,7 +74,7 @@ public class FlinkStreamEtlActuator
             throw new SylphException(JOB_BUILD_ERROR, e);
         }
     }
-
+//这里获取yarnAppId 打印相关信息 提交任务
     @Override
     public JobContainer createJobContainer(@NotNull Job job, String jobInfo)
     {

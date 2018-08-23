@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
-
+//mysql type sql使用名称
 @Name("mysql")
 @Description("this is mysql Sink, if table not execit ze create table")
 public class MysqlSink

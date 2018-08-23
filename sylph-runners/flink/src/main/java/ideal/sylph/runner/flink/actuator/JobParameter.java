@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-
+//任务 队列内存cpu 参数设置 类
 public class JobParameter
 {
     @JsonProperty("queue")

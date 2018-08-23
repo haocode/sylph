@@ -212,6 +212,7 @@ public class AstBuilder
 //            T t = clazz.cast(node);
 //            System.out.println(t);
 //        }
+        // 解释的比较笼统，意思就是将一个对象装换为类或者接口。此方法只能转换当前类型或其子类下的对象，只是简单进行强转
         return contexts.stream()
                 .map(this::visit)
                 .map(clazz::cast)

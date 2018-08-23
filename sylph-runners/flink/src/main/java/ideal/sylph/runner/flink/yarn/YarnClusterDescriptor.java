@@ -49,6 +49,8 @@ import java.util.stream.Collectors;
 
 import static org.apache.hadoop.yarn.api.records.YarnApplicationState.NEW;
 
+//任务提交到yarn类
+
 public class YarnClusterDescriptor
         extends AbstractYarnClusterDescriptor
 {

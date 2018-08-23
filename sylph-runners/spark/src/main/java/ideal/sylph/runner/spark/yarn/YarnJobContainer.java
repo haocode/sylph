@@ -37,7 +37,7 @@ public abstract class YarnJobContainer
     {
         yarnClient.killApplication(yarnAppId);
     }
-
+    //三元运算符 如果满足条件的话就执行第一个结果，如果不满足的话就执行另外一个结果
     @Override
     public String getRunId()
     {
@@ -53,6 +53,7 @@ public abstract class YarnJobContainer
     public boolean isRunning()
     {
         YarnApplicationState yarnAppStatus = getYarnAppStatus(yarnAppId);
+        //逻辑或的关系 第一个条件为真时，则不需要执行第二个条件的判断
         return YarnApplicationState.ACCEPTED.equals(yarnAppStatus) || YarnApplicationState.RUNNING.equals(yarnAppStatus);
     }
 

@@ -97,7 +97,7 @@ public class LocalJobStore
     }
 
     /**
-     * load local jobs dir job
+     * load local jobs dir job 获取本地job任务信息
      */
     @Override
     public void loadJobs()

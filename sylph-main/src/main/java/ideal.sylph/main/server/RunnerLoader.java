@@ -87,6 +87,7 @@ public class RunnerLoader
 
     private void loadPlugin(URLClassLoader pluginClassLoader)
     {
+        //ServiceLoader 定义多个统一接口类型的类，可以在程序中获取到所有配置的类  获取所有实现spi接口的类
         ServiceLoader<RunnerFactory> serviceLoader = ServiceLoader.load(RunnerFactory.class, pluginClassLoader);
         List<RunnerFactory> plugins = ImmutableList.copyOf(serviceLoader);
 
