@@ -9,7 +9,6 @@ import ideal.sylph.spi.SylphContext;
 import ideal.sylph.spi.job.JobContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -20,7 +19,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

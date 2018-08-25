@@ -96,11 +96,11 @@ public final class JobManager
     {
         return jobStore.getJobs();
     }
-
+    //
     private final ConcurrentMap<String, JobContainer> runningContainers = new ConcurrentHashMap<>();
 
     private boolean run;
-//启动任务
+    //监控任务状态
     private final Thread monitorService = new Thread(() -> {
         while (run) {
             runningContainers.forEach((jobId, container) -> {
@@ -115,6 +115,7 @@ public final class JobManager
                             //TODO: 判断任务启动 用掉耗时 如果大于5分钟 则进行放弃
                             break;
                         default:
+                            // pool.submit(new ThreadRunner((i + 1)));   把任务提交到线程池中
                             jobStartPool.submit(() -> {
                                 try {
                                     logger.warn("Job {}[{}] Status is {}, Soon to start", jobId,

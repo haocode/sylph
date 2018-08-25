@@ -26,6 +26,7 @@ import static java.util.Objects.requireNonNull;
 public class MetadataManager
 {
     private static final Logger logger = LoggerFactory.getLogger(MetadataManager.class);
+    //ObjectMapper类是Jackson库的类。它提供将转换成Java对象匹配JSON结构
     private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
     private final ConcurrentMap<String, String> jobInfoMetaData = new ConcurrentHashMap<>();
     private final ServerMainConfig config;
@@ -36,6 +37,8 @@ public class MetadataManager
     public MetadataManager(ServerMainConfig serverMainConfig, RunnerManager runnerManger)
     {
         this.config = requireNonNull(serverMainConfig, "serverMainConfig is null");
+
+        /// 读取  sylph-0.1.0-SNAPSHOT/data metadata.data 里面的信息  包含任务的基本信息
         this.metadataFile = new File(config.getMetadataPath(), "metadata.data");
         this.runnerManger = runnerManger;
     }

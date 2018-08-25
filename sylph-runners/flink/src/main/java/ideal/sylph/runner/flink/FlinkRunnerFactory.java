@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Throwables.throwIfUnchecked;
 import static java.util.Objects.requireNonNull;
-
+//获取注入 FlinkRunner FlinkStreamEtlActuator  FlinkStreamSqlActuator  FlinkYarnJobLauncher
 public class FlinkRunnerFactory
         implements RunnerFactory
 {

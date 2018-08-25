@@ -59,6 +59,9 @@ public class YarnClusterDescriptor
     private static final int MAX_ATTEMPT = 1;
     private static final long DEPLOY_TIMEOUT_MS = 600 * 1000;
     private static final long RETRY_DELAY_MS = 250;
+    //当线程2被阻塞时，其它的线程也被阻塞不能运行。所以使用Executors.newSingleThreadScheduledExecutor()
+    // 来创建线程池同时放入多个线程时，每个线程都会按照自己的调度来执行，但是当其中一个线程被阻塞时，其它的线程都会受到影响被阻塞，
+    // 不过依然都会按照自身调度来执行，但是会存在阻塞延迟。
     private static final ScheduledExecutorService YARN_POLL_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
     private final YarnClusterConfiguration clusterConf;
@@ -177,23 +180,27 @@ public class YarnClusterDescriptor
 
         amContainer.setEnvironment(appMasterEnv);
 
-        // Set up resource type requirements for ApplicationMaster
+        // Set up resource type requirements for ApplicationMaster @LimitedPrivate({"MapReduce", "YARN"})
         Resource capability = Records.newRecord(Resource.class);
+
+        //JobParameter appConf;
         capability.setMemory(appConf.getJobManagerMemoryMb());  //设置jobManneger
         capability.setVirtualCores(1);  //默认是1
-
+            //job id 作为jobname
         appContext.setApplicationName(appConf.getYarnJobName());
         appContext.setApplicationType(APPLICATION_TYPE);
         appContext.setAMContainerSpec(amContainer);
         appContext.setResource(capability);
         appContext.setApplicationTags(appConf.getAppTags());
         if (appConf.getQueue() != null) {
+            //ApplicationSubmissionContext appContext  这里设置yarn 的资源队列
             appContext.setQueue(appConf.getQueue());
         }
 
         LOG.info("Submitting application master {}", appId);
+        //启动一个appmaster
         yarnClient.submitApplication(appContext);
-
+        //获取任务部署状态
         PollDeploymentStatus poll = new PollDeploymentStatus(appId);
         YARN_POLL_EXECUTOR.submit(poll);
         try {

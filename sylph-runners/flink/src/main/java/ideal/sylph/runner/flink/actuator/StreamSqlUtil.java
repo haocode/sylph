@@ -56,6 +56,7 @@ public class StreamSqlUtil
             tableEnv.registerTableSource(tableName, tableSource);
 //            System.out.println(rowTypeInfo);
         }
+        //注册表输出表
         else if (SINK == createStream.getType()) {
             UnaryOperator<DataStream<Row>> outputStream = loader.loadSink(config);
             SylphTableSink tableSink = new SylphTableSink(rowTypeInfo, outputStream);

@@ -112,6 +112,7 @@ public class FlinkStreamSqlActuator
                 .taskManagerSlots(1) // -ys
                 .jobManagerMemoryMb(1024) //-yjm
                 .appTags(ImmutableSet.of("demo1", "demo2"))
+                //job id 作为jobname
                 .setYarnJobName(jobId);
 
         return new FlinkJobHandle(jobGraph, jobParameter);

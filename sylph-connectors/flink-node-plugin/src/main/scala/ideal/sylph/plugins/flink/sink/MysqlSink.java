@@ -59,6 +59,7 @@ public class MysqlSink
     {
         try {
             for (int i = 0; i < value.size(); i++) {
+
                 statement.setObject(i + 1, value.getAs(i));
             }
             statement.addBatch();
