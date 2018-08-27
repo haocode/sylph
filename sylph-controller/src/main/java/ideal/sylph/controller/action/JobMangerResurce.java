@@ -36,7 +36,8 @@ import static java.util.Objects.requireNonNull;
 public class JobMangerResurce
 {
     private static final Logger logger = LoggerFactory.getLogger(JobMangerResurce.class);
-
+//定义了一组servlet用来与其servlet容器进行通信的方法，例如，获取文件的MIME类型，调度请求或写入日志文件。
+    //在Servlet API中有一个javax.servlet.ServletContextListener接口，它能够监听ServletContext对象的生命周期，实际上就是监听Web应用的生命周期。
     @Context private ServletContext servletContext;
 
     //@javax.ws.rs.core.Context 注释指示注入了上下文对象。javax.ws.rs.core.UriInfo 接口是您要注入的对象的接口。 您可以利用 UriBuilder 类，使用 UriInfo 对象来构建绝对和相对 URL。

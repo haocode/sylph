@@ -34,7 +34,7 @@ public final class JettyServer
             ServerConfig serverConfig,
             SylphContext sylphContext
     )
-    {
+    {   //ServerConfig 类 设置 了 serverConfig的相关属性
         this.serverConfig = requireNonNull(serverConfig, "serverConfig is null");
         this.sylphContext = requireNonNull(sylphContext, "sylphContext is null");
     }
