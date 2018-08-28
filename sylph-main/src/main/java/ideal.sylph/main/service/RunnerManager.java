@@ -54,6 +54,8 @@ public class RunnerManager
         RunnerContext runnerContext = pluginLoader::getPluginsInfo;
         logger.info("===== Runner: {} starts loading {} =====", factory.getClass().getName(), PipelinePlugin.class.getName());
 
+
+        //RunnerFactory factory 的create方法实际调用  FlinkRunnerFactory 的create 方法
         final Runner runner = factory.create(runnerContext);
         runner.getJobActuators().forEach(jobActuatorHandle -> {
             JobActuator jobActuator = new JobActuatorImpl(jobActuatorHandle);
@@ -74,6 +76,7 @@ public class RunnerManager
      */
     JobContainer createJobContainer(@Nonnull Job job, String jobInfo)
     {
+        //得到任务的执行机构 得到任务的类型
         String jobType = requireNonNull(job.getActuatorName(), "job Actuator Name is null " + job.getId());
         JobActuator jobActuator = jobActuatorMap.get(jobType);
         checkArgument(jobActuator != null, jobType + " not exists");

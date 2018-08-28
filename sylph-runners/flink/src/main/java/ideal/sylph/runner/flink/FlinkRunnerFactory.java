@@ -54,6 +54,7 @@ public class FlinkRunnerFactory
             //count = studentList.stream().filter((student -> student.getCity().equals("chengdu"))).count();
             //
             Bootstrap app = new Bootstrap(new FlinkRunnerModule(), binder -> {
+                //只要在类上加上这个注解，就可以实现一个单例类，不需要自己手动编写单例实现类。@Named注解提供了为属性赋值的功能
                 binder.bind(FlinkRunner.class).in(Scopes.SINGLETON);
                 binder.bind(FlinkStreamEtlActuator.class).in(Scopes.SINGLETON);
                 binder.bind(FlinkStreamSqlActuator.class).in(Scopes.SINGLETON);

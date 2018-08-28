@@ -10,6 +10,7 @@ import ideal.sylph.common.jvm.JVMLauncher;
 import ideal.sylph.common.jvm.JVMLaunchers;
 import ideal.sylph.common.jvm.VmFuture;
 import ideal.sylph.parser.SqlParser;
+import ideal.sylph.parser.antlr4.SqlBaseParser;
 import ideal.sylph.parser.tree.CreateStream;
 import ideal.sylph.runner.flink.FlinkJobHandle;
 import ideal.sylph.runner.flink.yarn.FlinkYarnJobLauncher;
@@ -18,6 +19,7 @@ import ideal.sylph.spi.exception.SylphException;
 import ideal.sylph.spi.job.Flow;
 import ideal.sylph.spi.job.JobHandle;
 import ideal.sylph.spi.model.PipelinePluginManager;
+import org.antlr.v4.runtime.TokenStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.flink.runtime.jobgraph.JobGraph;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -129,6 +131,7 @@ public class FlinkStreamSqlActuator
                     execEnv.setParallelism(parallelism);
                     StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(execEnv);
                     SqlParser sqlParser = new SqlParser();
+//                    SqlBaseParser par=new SqlBaseParser( sqlText.);
                     for (String sql : sqlText.split(";")) {
                         if (sql.toLowerCase().contains("create ") && sql.toLowerCase().contains(" table ")) {
                             //如果包含建表语句建表操作

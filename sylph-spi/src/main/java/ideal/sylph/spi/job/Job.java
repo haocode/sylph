@@ -8,6 +8,8 @@ import java.util.Collection;
 
 public interface Job
 {
+    //javax.validation 是一套JavaBean参数校验的标准，它定义了很多常用的校验注解，
+    // 我们可以直接将这些注解加在我们JavaBean的属性上面，就可以在需要校验的时候进行校验了
     @NotNull
     public String getId();
 
@@ -20,6 +22,8 @@ public interface Job
 
     Collection<URL> getDepends();
 
+
+    //获取任务执行机构名称
     @NotNull
     String getActuatorName();
 

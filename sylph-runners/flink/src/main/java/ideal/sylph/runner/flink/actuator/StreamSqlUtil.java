@@ -31,7 +31,9 @@ public class StreamSqlUtil
 
     public static void runCreateTableSql(PipelinePluginManager pluginManager, StreamTableEnvironment tableEnv, SqlParser sqlParser, String sql)
     {
+
         CreateStream createStream = (CreateStream) sqlParser.createStatement(sql);
+
         String tableName = createStream.getName().toString();
 
         List<ColumnDefinition> columns = createStream.getElements().stream().map(ColumnDefinition.class::cast).collect(Collectors.toList());

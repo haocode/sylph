@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 /**
- * Job Container
+ * Job Container 包含job运行时的相关容器信息
  */
 public interface JobContainer
 {
