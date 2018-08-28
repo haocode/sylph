@@ -90,6 +90,7 @@ public class FlinkStreamSqlActuator
         for (String sql : sqlText.split(";")) {
             if (sql.toLowerCase().contains("create ") && sql.toLowerCase().contains(" table ")) {
                 CreateStream createTable = (CreateStream) parser.createStatement(sql);
+                //这个方法获取 sql with 后面的参数
                 Map<String, String> withConfig = createTable.getProperties().stream()
                         .collect(Collectors.toMap(
                                 k -> k.getName().getValue(),
