@@ -23,8 +23,7 @@ import org.apache.flink.types.Row;
 /**
  * udf
  */
-public final class RowGet
-        extends ScalarFunction
+public final class RowGet extends ScalarFunction
 {
     public String eval(Row row, int i)
     {
