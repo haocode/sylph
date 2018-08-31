@@ -27,7 +27,6 @@ import ideal.sylph.annotation.Name;
 import ideal.sylph.parser.SqlParser;
 import ideal.sylph.parser.tree.CreateStream;
 import ideal.sylph.runner.flink.FlinkJobHandle;
-import ideal.sylph.runner.flink.udf.UdfFactory;
 import ideal.sylph.runner.flink.yarn.FlinkYarnJobLauncher;
 import ideal.sylph.spi.classloader.DirClassLoader;
 import ideal.sylph.spi.exception.SylphException;
@@ -55,7 +54,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
+import static ideal.sylph.runner.flink.udf.UdfFactory.getUserDefinedFunctionHashMap;
 import static ideal.sylph.spi.exception.StandardErrorCode.JOB_BUILD_ERROR;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
@@ -70,6 +69,7 @@ public class FlinkStreamSqlActuator
     private static final ObjectMapper MAPPER = new ObjectMapper();
     @Inject private FlinkYarnJobLauncher jobLauncher;
     @Inject private PipelinePluginManager pluginManager;
+//    @Inject private  UdfFactory udfFactory;
 
     @Override
     public Flow formFlow(byte[] flowBytes)
@@ -159,7 +159,7 @@ public class FlinkStreamSqlActuator
                     execEnv.setParallelism(parallelism);
                     StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(execEnv);
                     // 根据注解注册udf函数
-                    for (Map.Entry<String, UserDefinedFunction> entry : UdfFactory.getUserDefinedFunctionHashMap().entrySet()) {
+                    for (Map.Entry<String, UserDefinedFunction> entry : getUserDefinedFunctionHashMap().entrySet()) {
                         if (entry.getValue() instanceof TableFunction) {
                             tableEnv.registerFunction(entry.getKey(), (TableFunction) entry.getValue());
                         } else if (entry.getValue() instanceof AggregateFunction) {

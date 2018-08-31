@@ -17,8 +17,6 @@ package ideal.sylph.parser;
 
 import com.google.common.collect.ImmutableList;
 import ideal.sylph.parser.antlr4.SqlBaseBaseVisitor;
-import ideal.sylph.parser.antlr4.SqlBaseLexer;
-import ideal.sylph.parser.antlr4.SqlBaseParser;
 import ideal.sylph.parser.tree.ColumnDefinition;
 import ideal.sylph.parser.tree.CreateFunction;
 import ideal.sylph.parser.tree.CreateStream;
