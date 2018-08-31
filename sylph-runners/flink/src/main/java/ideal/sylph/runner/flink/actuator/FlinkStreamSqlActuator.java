@@ -27,6 +27,7 @@ import ideal.sylph.annotation.Name;
 import ideal.sylph.parser.SqlParser;
 import ideal.sylph.parser.tree.CreateStream;
 import ideal.sylph.runner.flink.FlinkJobHandle;
+import ideal.sylph.runner.flink.udf.UdfFactory;
 import ideal.sylph.runner.flink.yarn.FlinkYarnJobLauncher;
 import ideal.sylph.spi.classloader.DirClassLoader;
 import ideal.sylph.spi.exception.SylphException;
@@ -39,6 +40,10 @@ import org.apache.flink.runtime.jobgraph.JobGraph;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.TableEnvironment;
 import org.apache.flink.table.api.java.StreamTableEnvironment;
+import org.apache.flink.table.functions.AggregateFunction;
+import org.apache.flink.table.functions.ScalarFunction;
+import org.apache.flink.table.functions.TableFunction;
+import org.apache.flink.table.functions.UserDefinedFunction;
 import org.fusesource.jansi.Ansi;
 
 import javax.validation.constraints.NotNull;
@@ -153,6 +158,16 @@ public class FlinkStreamSqlActuator
                     StreamExecutionEnvironment execEnv = StreamExecutionEnvironment.createLocalEnvironment();
                     execEnv.setParallelism(parallelism);
                     StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(execEnv);
+                    // 根据注解注册udf函数
+                    for (Map.Entry<String, UserDefinedFunction> entry : UdfFactory.getUserDefinedFunctionHashMap().entrySet()) {
+                        if (entry.getValue() instanceof TableFunction) {
+                            tableEnv.registerFunction(entry.getKey(), (TableFunction) entry.getValue());
+                        } else if (entry.getValue() instanceof AggregateFunction) {
+                            tableEnv.registerFunction(entry.getKey(), (AggregateFunction) entry.getValue());
+                        } else if (entry.getValue() instanceof ScalarFunction) {
+                            tableEnv.registerFunction(entry.getKey(), (ScalarFunction) entry.getValue());
+                        }
+                    }
                     StreamSqlBuilder streamSqlBuilder = new StreamSqlBuilder(tableEnv, pluginManager, new SqlParser());
                     Arrays.stream(sqlSplit).forEach(streamSqlBuilder::buildStreamBySql);
                     return execEnv.getStreamGraph().getJobGraph();
