@@ -24,7 +24,7 @@ fi
 
 #HADOOP_CONF_DIR=/etc/hadoop/conf
 #
-exec java $GRAPHX_OPTS -cp lib/*: -Dconfig=etc/sylph/sylph.properties -Dlog4j.file=etc/sylph/sylph-log4j.properties $mainClass "$@"
+exec java $GRAPHX_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8099 -cp lib/*: -Dconfig=etc/sylph/sylph.properties -Dlog4j.file=etc/sylph/sylph-log4j.properties $mainClass "$@"
 
 
 #nohup $cmd > ${0%/*}/../logs/server.log 2>&1 &

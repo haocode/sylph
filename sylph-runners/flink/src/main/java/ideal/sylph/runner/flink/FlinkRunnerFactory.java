@@ -20,6 +20,7 @@ import com.google.inject.Scopes;
 import ideal.common.bootstrap.Bootstrap;
 import ideal.sylph.runner.flink.actuator.FlinkStreamEtlActuator;
 import ideal.sylph.runner.flink.actuator.FlinkStreamSqlActuator;
+import ideal.sylph.runner.flink.udf.UdfFactory;
 import ideal.sylph.runner.flink.yarn.FlinkYarnJobLauncher;
 import ideal.sylph.spi.Runner;
 import ideal.sylph.spi.RunnerContext;
@@ -62,6 +63,7 @@ public class FlinkRunnerFactory
                 binder.bind(FlinkStreamEtlActuator.class).in(Scopes.SINGLETON);
                 binder.bind(FlinkStreamSqlActuator.class).in(Scopes.SINGLETON);
                 binder.bind(FlinkYarnJobLauncher.class).in(Scopes.SINGLETON);
+                binder.bind(UdfFactory.class).in(Scopes.SINGLETON);
                 //----------------------------------
                 binder.bind(PipelinePluginManager.class)
                         .toProvider(() -> createPipelinePluginManager(context))
