@@ -25,6 +25,7 @@ import ideal.sylph.parser.tree.CreateStreamAsSelect;
 import ideal.sylph.parser.tree.Statement;
 import ideal.sylph.runner.flink.etl.FlinkNodeLoader;
 import ideal.sylph.runner.flink.table.SylphTableSink;
+import ideal.sylph.runner.flink.udf.UdfFactory;
 import ideal.sylph.spi.NodeLoader;
 import ideal.sylph.spi.model.PipelinePluginManager;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -38,6 +39,7 @@ import org.apache.flink.table.api.java.StreamTableEnvironment;
 import org.apache.flink.table.functions.AggregateFunction;
 import org.apache.flink.table.functions.ScalarFunction;
 import org.apache.flink.table.functions.TableFunction;
+import org.apache.flink.table.functions.UserDefinedFunction;
 import org.apache.flink.types.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +99,18 @@ class StreamSqlBuilder
 
     private void createFunction(CreateFunction createFunction)
     {
+
+        // 根据注解注册udf函数
+        for (Map.Entry<String, UserDefinedFunction> entry : UdfFactory.getUserDefinedFunctionHashMap().entrySet()) {
+            if (entry.getValue() instanceof TableFunction) {
+                tableEnv.registerFunction(entry.getKey(), (TableFunction) entry.getValue());
+            } else if (entry.getValue() instanceof AggregateFunction) {
+                tableEnv.registerFunction(entry.getKey(), (AggregateFunction) entry.getValue());
+            } else if (entry.getValue() instanceof ScalarFunction) {
+                tableEnv.registerFunction(entry.getKey(), (ScalarFunction) entry.getValue());
+            }
+        }
+
         Object function = null;
         try {
             Class driver = Class.forName(createFunction.getClassString());

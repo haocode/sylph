@@ -28,6 +28,8 @@ dependencies {
 
   //colour
   compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.17.1'
+  //udf
+  compile group: 'org.reflections', name: 'reflections', version: '0.9.9-RC1'
 
   testCompile project(':sylph-connectors:flink-node-plugin')
 }

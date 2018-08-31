@@ -44,8 +44,8 @@ public class KafkaSource
         implements Source<StreamTableEnvironment, DataStream<Row>>
 {
     private static final long serialVersionUID = 2L;
-    private static final String[] KAFKA_COLUMNS = new String[] {"_topic", "_key", "_message", "_partition", "_offset"};
-
+   // private static final String[] KAFKA_COLUMNS = new String[] {"_topic", "_key", "_message", "_partition", "_offset"};
+    private static final String[] KAFKA_COLUMNS = new String[] {};
     private transient java.util.Map<String, Object> optionMap;
     private transient StreamTableEnvironment tableEnv;
 
