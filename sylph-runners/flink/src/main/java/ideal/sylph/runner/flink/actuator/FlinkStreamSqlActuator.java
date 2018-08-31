@@ -69,8 +69,7 @@ public class FlinkStreamSqlActuator
     private static final ObjectMapper MAPPER = new ObjectMapper();
     @Inject private FlinkYarnJobLauncher jobLauncher;
     @Inject private PipelinePluginManager pluginManager;
-    @Inject private static UdfFactory udfFactory;
-            //= new UdfFactory();
+    @Inject private static UdfFactory udfFactory = new UdfFactory();
 
     @Override
     public Flow formFlow(byte[] flowBytes)
