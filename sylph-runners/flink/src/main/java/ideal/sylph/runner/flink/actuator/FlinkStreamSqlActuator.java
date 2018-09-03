@@ -159,8 +159,8 @@ public class FlinkStreamSqlActuator
                     execEnv.setParallelism(parallelism);
                     StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(execEnv);
                     // 根据注解注册udf函数
-                      UdfFactory udfFactory = new UdfFactory();
-                    for (Map.Entry<String, UserDefinedFunction> entry : udfFactory.getUserDefinedFunctionHashMap().entrySet()) {
+//                      UdfFactory udfFactory = new UdfFactory();
+                    for (Map.Entry<String, UserDefinedFunction> entry : UdfFactory.getUserDefinedFunctionHashMap().entrySet()) {
                         if (entry.getValue() instanceof TableFunction) {
                             tableEnv.registerFunction(entry.getKey(), (TableFunction) entry.getValue());
                         } else if (entry.getValue() instanceof AggregateFunction) {
