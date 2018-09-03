@@ -63,7 +63,6 @@ public class FlinkRunnerFactory
                 binder.bind(FlinkStreamEtlActuator.class).in(Scopes.SINGLETON);
                 binder.bind(FlinkStreamSqlActuator.class).in(Scopes.SINGLETON);
                 binder.bind(FlinkYarnJobLauncher.class).in(Scopes.SINGLETON);
-                //binder.bind(UdfFactory.class).in(Scopes.SINGLETON);
                 //----------------------------------
                 binder.bind(PipelinePluginManager.class)
                         .toProvider(() -> createPipelinePluginManager(context))
