@@ -109,24 +109,37 @@ public class FlinkStreamSqlActuator
         final String sqlText = flow.getFlowString();
         ImmutableSet.Builder<File> builder = ImmutableSet.builder();
         SqlParser parser = new SqlParser();
+
         String[] sqlSplit = Stream.of(sqlText.split(";(?=([^\']*\'[^\']*\')*[^\']*$)"))
                 .filter(StringUtils::isNotBlank).toArray(String[]::new);
-        Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("create ") && sql.toLowerCase().contains(" table "))
-                .map(parser::createStatement)
-                .filter(statement -> statement instanceof CreateStream)
-                .forEach(statement -> {
-                    CreateStream createTable = (CreateStream) statement;
-                    Map<String, String> withConfig = createTable.getProperties().stream()
-                            .collect(Collectors.toMap(
-                                    k -> k.getName().getValue(),
-                                    v -> v.getValue().toString().replace("'", ""))
-                            );
-                    String driverString = requireNonNull(withConfig.get("type"), "driver is null");
-                    Optional<PipelinePluginManager.PipelinePluginInfo> pluginInfo = pluginManager.findPluginInfo(driverString);
-                    pluginInfo.ifPresent(plugin -> FileUtils
-                            .listFiles(plugin.getPluginFile(), null, true)
-                            .forEach(builder::add));
-                });
+
+        if(sqlText.toLowerCase().contains("use table ")){
+            String[] tableArray=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).map(sql -> sql.split(
+                    ";(?=([^\']*\'[^\']*\')*[^\']*$)")).toArray(String[]::new);
+            String[]   typeArray =Stream.of(tableArray).map(table -> table.split(".")[0]).toArray(String[]::new);
+
+
+
+        }else{
+            Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("create ") && sql.toLowerCase().contains(" table "))
+                    .map(parser::createStatement)
+                    .filter(statement -> statement instanceof CreateStream)
+                    .forEach(statement -> {
+                        CreateStream createTable = (CreateStream) statement;
+                        Map<String, String> withConfig = createTable.getProperties().stream()
+                                .collect(Collectors.toMap(
+                                        k -> k.getName().getValue(),
+                                        v -> v.getValue().toString().replace("'", ""))
+                                );
+                        String driverString = requireNonNull(withConfig.get("type"), "driver is null");
+                        Optional<PipelinePluginManager.PipelinePluginInfo> pluginInfo = pluginManager.findPluginInfo(driverString);
+                        pluginInfo.ifPresent(plugin -> FileUtils
+                                .listFiles(plugin.getPluginFile(), null, true)
+                                .forEach(builder::add));
+                    });
+        }
+
+
         jobClassLoader.addJarFiles(builder.build());
         //----- compile --
         final int parallelism = 2;

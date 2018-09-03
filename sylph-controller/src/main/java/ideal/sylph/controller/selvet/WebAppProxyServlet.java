@@ -105,6 +105,7 @@ public class WebAppProxyServlet
         // since that is what the AM filter checks against. IP aliasing or
         // similar could cause issues otherwise.
         InetAddress localAddress = InetAddress.getByName(proxyHost);
+        LOG.info(proxyHost);
         if (LOG.isDebugEnabled()) {
             LOG.debug("local InetAddress for proxy host: {}", localAddress);
         }
@@ -158,6 +159,7 @@ public class WebAppProxyServlet
         }
         catch (Exception e) {
             resp.sendError(500, Throwables.getRootCause(e).toString());
+            LOG.info(Throwables.getRootCause(e).toString());
         }
     }
 

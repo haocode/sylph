@@ -152,6 +152,7 @@ public final class JVMLauncher<R extends Serializable>
             int port = Integer.parseInt(args[0]);
             Socket sock = new Socket();
             sock.connect(new InetSocketAddress(InetAddress.getLocalHost(), port));
+
             return sock.getOutputStream();
         }
         else {

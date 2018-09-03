@@ -89,6 +89,11 @@ class StreamSqlBuilder
             else {
                 throw new IllegalArgumentException("this driver class " + statement.getClass() + " have't support!");
             }
+        }else if(sql.toLowerCase().contains("use ") && (sql.toLowerCase().contains(" table "))){
+
+
+
+
         }
         else {
             tableEnv.sqlUpdate(sql);
