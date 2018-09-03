@@ -5,13 +5,16 @@ dependencies {
 
     compile group: 'com.google.guava', name: 'guava', version: deps.guava
 }
-generateGrammarSource.dependsOn 'licenseMain','licenseTest'
-licenseMain.dependsOn 'clean'
-licenseTest.dependsOn 'clean'
 
-license {
-    excludes(["**/*.g4","**/*.tokens"])
-}
+//注释licenseMain
+//generateGrammarSource.dependsOn 'licenseMain','licenseTest'
+//licenseMain.dependsOn 'clean'
+//licenseTest.dependsOn 'clean'
+
+//license {
+//    excludes(["**/*.g4","**/*.tokens"])
+//}
+//注释licenseMain
 
 //sourceSets {
 //    main {
