@@ -109,15 +109,15 @@ public class FlinkStreamSqlActuator
         final String sqlText = flow.getFlowString();
         ImmutableSet.Builder<File> builder = ImmutableSet.builder();
         SqlParser parser = new SqlParser();
-
+                             //(?=pattern) 例如，'Windows (?=95|98|NT|2000)' 匹配"Windows 2000"中的"Windows"，
+        // 但不匹配"Windows 3.1"中的"Windows" $ 匹配输入字符串结尾的位置
         String[] sqlSplit = Stream.of(sqlText.split(";(?=([^\']*\'[^\']*\')*[^\']*$)"))
                 .filter(StringUtils::isNotBlank).toArray(String[]::new);
 
         if(sqlText.toLowerCase().contains("use table ")){
             String[] tableArray=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).map(sql -> sql.split(
-                    ";(?=([^\']*\'[^\']*\')*[^\']*$)")).toArray(String[]::new);
+                    "use table ")[0].split(",")).toArray(String[]::new);
             String[]   typeArray =Stream.of(tableArray).map(table -> table.split(".")[0]).toArray(String[]::new);
-
 
 
         }else{
