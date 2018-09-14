@@ -117,46 +117,12 @@ public class KafkaSourceUtil {
         }
 
         KafkaTableSource source = kafkaJsonTableSourceBuilder.build();
-        // 如果job配置中显示重新指定了source表的名称，则使用指定的；否则使用kafka topic元数据中默认的flink表名称
+        // 如果  source配置中显示重新指定了source表的名称，则使用指定的；否则使用kafka topic元数据中默认的flink表名称
         String registerName = kafkaSourceSchema.getFlinkTableName();
         if (tableSchema.getName() != null && !tableSchema.getName().isEmpty()) {
             registerName = tableSchema.getName();
         }
         streamTableEnvironment.registerTableSource(registerName, source);
     }
-
-
-
-//    /**
-//     * 初始化注册表信息，以及注册配置了scan属性的表
-//     *
-//     * @param tableEnv
-//     * @param jobSchema
-//     * @throws IOException
-//     */
-//    public static void registerTableSources(StreamTableEnvironment tableEnv,
-//                                            JobSchema jobSchema) throws IOException {
-//        Properties properties = GlobalProp.getProperties();
-//        String testfilepath = null;
-//        testfilepath = jobSchema.getTestFilePath();
-//        Map<String, com.caocao.archmage.flink.source.TableSchema> sources = jobSchema.getSources();
-//
-//        for (Map.Entry<String, com.caocao.archmage.flink.source.TableSchema> entry : sources.entrySet()) {
-//            String sourceSchemaFileName = entry.getKey();
-//            if (entry.getValue() == null) {
-//                throw new RuntimeException("[" + sourceSchemaFileName + "]source没有配置属性");
-//            }
-//            com.caocao.archmage.flink.source.TableSchema tableSchema = entry.getValue();
-//            if (testfilepath == null) {
-//                KafkaSourceUtil.registerTableSource(tableEnv,
-//                        sourceSchemaFileName, tableSchema, properties);
-//            } else {
-//                String testfile = testfilepath + java.io.File.separator + sourceSchemaFileName;
-//                KafkaSourceUtil.registerTestTableSource(tableEnv,
-//                        sourceSchemaFileName, tableSchema, properties, testfile);
-//            }
-//        }
-//    }
-
 
 }

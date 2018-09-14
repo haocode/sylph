@@ -1,7 +1,0 @@
-bootstrapServers: ${bigdata.kafka.bootstrap.servers}
-topic: DATA.AIDE_ORDER.AO_ORDER
-fieldSchemas:
-  - {name: customer_no, type: bigint, alias: }
-  - {name: order_type, type: string, alias: }
-watermarkDelay: 1000
-flinkTableName: aide_order.ao_order

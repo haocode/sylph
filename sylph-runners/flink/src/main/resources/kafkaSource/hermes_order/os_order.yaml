@@ -1,8 +1,0 @@
-bootstrapServers: ${bigdata.kafka.bootstrap.servers}
-topic: DATA.HERMES_ORDER.OS_ORDER
-fieldSchemas:
-  - {name: order_no, type: bigint, alias: }
-  - {name: customer_no, type: bigint, alias: }
-  - {name: order_type, type: string, alias: }
-watermarkDelay: 1000
-flinkTableName: hermes_order.os_order
