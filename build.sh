@@ -8,6 +8,7 @@ java -version
 
 #./gradlew -v
 
+git pull
 
 /home/admin/sylph/sylph-dist/build/bin/launcher stop
 
