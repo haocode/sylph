@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -54,6 +55,22 @@ public final class StreamSqlUtil
             throw new RuntimeException("sourceType not is RowTypeInfo");
         }
     }
+
+
+
+
+    public static <T> T mapToObject(Map<String, Object> map, Class<T> beanClass) throws Exception {
+        if (map == null) {
+            return null;
+        }
+
+        T obj = beanClass.newInstance();
+        org.apache.commons.beanutils.BeanUtils.populate(obj, map);
+
+        return obj;
+    }
+
+
 
     static DataStream<Row> buildWaterMark(
             WaterMark waterMark,

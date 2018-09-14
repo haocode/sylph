@@ -50,9 +50,7 @@ import javax.validation.constraints.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import static ideal.sylph.spi.exception.StandardErrorCode.JOB_BUILD_ERROR;
@@ -115,9 +113,25 @@ public class FlinkStreamSqlActuator
                 .filter(StringUtils::isNotBlank).toArray(String[]::new);
 
         if(sqlText.toLowerCase().contains("use table ")){
-            String[] tableArray=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).map(sql -> sql.split(
-                    "use table ")[0].split(",")).toArray(String[]::new);
-            String[]   typeArray =Stream.of(tableArray).map(table -> table.split(".")[0]).toArray(String[]::new);
+//            String[] tableArray=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).map(sql -> sql.split(
+//                    "use table")[0].split(",")).toArray(String[]::new);
+            Set<String> tableSet=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).flatMap
+                    (sqlfile -> Arrays.stream(sqlfile.split("use table ")[1].split(","))).collect(Collectors.toSet());
+
+            Map <String,String> table_type =new HashMap<String,String>();
+            for (String table:tableSet) {
+                String[] kv =table.split("\\.");
+                table_type.put(kv[1],kv[0]);
+            }
+
+            for (String type :table_type.values()
+                 ) {
+                Optional<PipelinePluginManager.PipelinePluginInfo> pluginInfo = pluginManager.findPluginInfo(type);
+                pluginInfo.ifPresent(plugin -> FileUtils
+                        .listFiles(plugin.getPluginFile(), null, true)
+                        .forEach(builder::add));
+            }
+
 
 
         }else{
@@ -173,15 +187,7 @@ public class FlinkStreamSqlActuator
                     StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(execEnv);
                     // 根据注解注册udf函数
 //                      UdfFactory udfFactory = new UdfFactory();
-                    for (Map.Entry<String, UserDefinedFunction> entry : UdfFactory.getUserDefinedFunctionHashMap().entrySet()) {
-                        if (entry.getValue() instanceof TableFunction) {
-                            tableEnv.registerFunction(entry.getKey(), (TableFunction) entry.getValue());
-                        } else if (entry.getValue() instanceof AggregateFunction) {
-                            tableEnv.registerFunction(entry.getKey(), (AggregateFunction) entry.getValue());
-                        } else if (entry.getValue() instanceof ScalarFunction) {
-                            tableEnv.registerFunction(entry.getKey(), (ScalarFunction) entry.getValue());
-                        }
-                    }
+                    get_udf( tableEnv);
                     StreamSqlBuilder streamSqlBuilder = new StreamSqlBuilder(tableEnv, pluginManager, new SqlParser());
                     Arrays.stream(sqlSplit).forEach(streamSqlBuilder::buildStreamBySql);
                     return execEnv.getStreamGraph().getJobGraph();
@@ -198,4 +204,55 @@ public class FlinkStreamSqlActuator
             throw new RuntimeException("StreamSql job build failed", e);
         }
     }
+
+
+//    private static JobGraph compile(
+//            String jobId,
+//            PipelinePluginManager pluginManager,
+//            int parallelism,
+//            String[] sqlSplit,
+//            Map<String,String> table_type,
+//            DirClassLoader jobClassLoader)
+//    {
+//        JVMLauncher<JobGraph> launcher = JVMLaunchers.<JobGraph>newJvm()
+//                .setConsole((line) -> System.out.println(new Ansi().fg(YELLOW).a("[" + jobId + "] ").fg(GREEN).a(line).reset()))
+//                .setCallable(() -> {
+//                    System.out.println("************ job start ***************");
+//                    StreamExecutionEnvironment execEnv = StreamExecutionEnvironment.createLocalEnvironment();
+//                    execEnv.setParallelism(parallelism);
+//                    StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(execEnv);
+//                    get_udf( tableEnv);
+//                    StreamSqlBuilder streamSqlBuilder = new StreamSqlBuilder(tableEnv, pluginManager, new SqlParser());
+//
+//                    Arrays.stream(sqlSplit).forEach(streamSqlBuilder::buildStreamBySql);
+//                    return execEnv.getStreamGraph().getJobGraph();
+//                })
+//                .addUserURLClassLoader(jobClassLoader)
+//                .build();
+//
+//        try {
+//            launcher.startAndGet(jobClassLoader);
+//            VmFuture<JobGraph> result = launcher.startAndGet(jobClassLoader);
+//            return result.get().orElseThrow(() -> new SylphException(JOB_BUILD_ERROR, result.getOnFailure()));
+//        }
+//        catch (IOException | JVMException | ClassNotFoundException e) {
+//            throw new RuntimeException("StreamSql job build failed", e);
+//        }
+//    }
+
+    public static void get_udf(StreamTableEnvironment tableEnv){
+        // 根据注解注册udf函数
+        for (Map.Entry<String, UserDefinedFunction> entry : UdfFactory.getUserDefinedFunctionHashMap().entrySet()) {
+            if (entry.getValue() instanceof TableFunction) {
+                tableEnv.registerFunction(entry.getKey(), (TableFunction) entry.getValue());
+            } else if (entry.getValue() instanceof AggregateFunction) {
+                tableEnv.registerFunction(entry.getKey(), (AggregateFunction) entry.getValue());
+            } else if (entry.getValue() instanceof ScalarFunction) {
+                tableEnv.registerFunction(entry.getKey(), (ScalarFunction) entry.getValue());
+            }
+        }
+
+    }
+
+
 }

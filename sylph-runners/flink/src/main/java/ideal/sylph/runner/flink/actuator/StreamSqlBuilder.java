@@ -15,6 +15,7 @@
  */
 package ideal.sylph.runner.flink.actuator;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import ideal.sylph.parser.SqlParser;
@@ -25,6 +26,9 @@ import ideal.sylph.parser.tree.CreateStreamAsSelect;
 import ideal.sylph.parser.tree.Statement;
 import ideal.sylph.runner.flink.etl.FlinkNodeLoader;
 import ideal.sylph.runner.flink.table.SylphTableSink;
+import ideal.sylph.runner.flink.util.GlobalProp;
+import ideal.sylph.runner.flink.util.KafkaSourceUtil;
+import ideal.sylph.runner.flink.util.TableSchemas;
 import ideal.sylph.spi.NodeLoader;
 import ideal.sylph.spi.model.PipelinePluginManager;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -42,15 +46,17 @@ import org.apache.flink.types.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static ideal.sylph.parser.tree.CreateStream.Type.SINK;
 import static ideal.sylph.parser.tree.CreateStream.Type.SOURCE;
 import static ideal.sylph.runner.flink.actuator.StreamSqlUtil.buildWaterMark;
 import static ideal.sylph.runner.flink.actuator.StreamSqlUtil.checkStream;
+import static ideal.sylph.runner.flink.actuator.StreamSqlUtil.mapToObject;
 
 class StreamSqlBuilder
 {
@@ -64,6 +70,7 @@ class StreamSqlBuilder
             StreamTableEnvironment tableEnv,
             PipelinePluginManager pluginManager,
             SqlParser sqlParser
+
     )
     {
         this.pluginManager = pluginManager;
@@ -73,6 +80,7 @@ class StreamSqlBuilder
 
     void buildStreamBySql(String sql)
     {
+
         if (sql.toLowerCase().contains("create ") &&
                 (sql.toLowerCase().contains(" table ") || sql.toLowerCase().contains(" function "))
         ) {
@@ -90,9 +98,35 @@ class StreamSqlBuilder
                 throw new IllegalArgumentException("this driver class " + statement.getClass() + " have't support!");
             }
         }else if(sql.toLowerCase().contains("use ") && (sql.toLowerCase().contains(" table "))){
+            try {
+            Properties properties=new Properties();
+            properties.load(KafkaSourceUtil.class.getClassLoader().getResourceAsStream("conf.properties"));
+            GlobalProp.setProperties(properties);
+            Set<String> tableSet= Stream.of(sql).filter(sqlsplit -> sqlsplit.toLowerCase().contains("use table ")).map(
+                    sqlfile -> sqlfile.split("use table ")[1]).collect(Collectors.toSet());
+            for (String table:tableSet) {
+                JSONObject tablArray   =   JSONObject.parseObject(table);
+                tablArray.keySet().stream().forEach(System.out::println);
+                for (String sourceName : tablArray.keySet()) {
+                    Map sourceTablePro = (Map) tablArray.get(sourceName);
 
-
-
+                    TableSchemas tableSchema = null;
+                    try {
+                        tableSchema = mapToObject(sourceTablePro, TableSchemas.class);
+                        String[] kv =sourceName.split("\\.");
+                        if (kv[0].equals("kafka")) {
+                            KafkaSourceUtil.registerTableSource(tableEnv,
+                                    kv[1], tableSchema, properties);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    logger.info(tableSchema.getGroupId() +"#####"+ tableSchema.getOffsetStrategy());
+                }
+            }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
         else {
