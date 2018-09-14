@@ -6,8 +6,13 @@
 #export PATH=$JAVA10_HOME/bin:$PATH
 java -version
 
-./gradlew -v
+#./gradlew -v
+
+
+/home/admin/sylph/sylph-dist/build/bin/launcher stop
 
 ./gradlew assemble "$@"
 
 #./gradlew clean checkstyle assemble test "$@"
+
+/home/admin/sylph/sylph-dist/build/bin/launcher start
