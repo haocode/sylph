@@ -1,0 +1,10 @@
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+topic: DATA.DRIVER_CENTER.DC_DRIVER_INFO
+fieldSchemas:
+  - {name: driver_no, type: bigint, alias: }
+  - {name: update_time, type: timestamp, alias: }
+  - {name: online, type: int, alias: }
+  - {name: city_code, type: int, alias: }
+timeField: update_time
+watermarkDelay: 1000
+flinkTableName: driver_center.dc_driver_info

@@ -1,0 +1,20 @@
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+topic: GALAXY_DC_RECEIVE_ORDER
+fieldSchemas:
+  - {name: orderNo, type: bigint, alias: order_no}
+  - {name: customerNo, type: bigint, alias: customer_no}
+  - {name: driverNo, type: bigint, alias: driver_no}
+  - {name: orderConfirmTime, type: timestamp, alias: order_confirm_time}
+  - {name: h3No, type: bigint, alias: h3_no}
+  - {name: roadCongestionType, type: int, alias: road_congestion_type}
+  - {name: orderStartH3No, type: bigint, alias: start_h3_no}
+  - {name: orderEndH3No, type: bigint, alias: end_h3_no}
+  - {name: vin, type: string, alias: vin}
+  - {name: carId, type: bigint, alias: car_id}
+  - {name: duration, type: timestamp, alias: duration}
+  - {name: distance, type: int, alias: distance}
+  - {name: whoTel, type: string, alias: who_tel}
+processTimeMode: false
+timeField: order_confirm_time
+watermarkDelay: 1000
+flinkTableName: galaxy_dc_receive_order

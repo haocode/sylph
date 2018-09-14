@@ -10,6 +10,7 @@ import org.apache.flink.table.sources.wmstrategies.BoundedOutOfOrderTimestamps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,10 +27,10 @@ public class KafkaSourceUtil {
         InputStream in;
         String filePath;
         LOGGER.debug("kafkaSourceDirectory" + kafkaSourceDirectory);
-        filePath= kafkaSourceDirectory + "/" + fileName;
+        filePath= kafkaSourceDirectory + File.separator + fileName;
         in= new FileInputStream(filePath);
         if (in == null) {
-            filePath=kafkaSourceDirectory+"/" +requireNonNull(fileName.split("__")[0],"kakfa 表名称使用不规范")+"/"+ fileName;
+            filePath=kafkaSourceDirectory+File.separator +requireNonNull(fileName.split("__")[0],"kakfa 表名称使用不规范")+File.separator+ fileName;
             in=new FileInputStream(filePath);
 
         }

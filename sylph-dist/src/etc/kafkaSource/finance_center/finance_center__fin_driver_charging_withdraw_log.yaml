@@ -1,0 +1,22 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: driver_no, type: bigint}
+- {alias: null, name: real_name, type: string}
+- {alias: null, name: withdraw_serial_no, type: string}
+- {alias: null, name: status, type: int}
+- {alias: null, name: withdraw_account_no, type: string}
+- {alias: null, name: withdraw_amount, type: int}
+- {alias: null, name: withdraw_date, type: date}
+- {alias: null, name: charge, type: int}
+- {alias: null, name: success_time, type: timestamp}
+- {alias: null, name: batch_no, type: string}
+- {alias: null, name: version, type: int}
+- {alias: null, name: description, type: string}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: finance_center__fin_driver_charging_withdraw_log
+timeField: create_time
+topic: DATA.FINANCE_CENTER.FIN_DRIVER_CHARGING_WITHDRAW_LOG
+watermarkDelay: 1000

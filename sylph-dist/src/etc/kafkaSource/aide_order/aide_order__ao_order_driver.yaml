@@ -1,0 +1,24 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: order_no, type: bigint}
+- {alias: null, name: driver_no, type: bigint}
+- {alias: null, name: car_id, type: bigint}
+- {alias: null, name: car_number, type: string}
+- {alias: null, name: car_type, type: string}
+- {alias: null, name: driver_name, type: string}
+- {alias: null, name: driver_phone, type: string}
+- {alias: null, name: virtual_phone, type: string}
+- {alias: null, name: driver_photo, type: string}
+- {alias: null, name: car_color, type: string}
+- {alias: null, name: car_brand, type: string}
+- {alias: null, name: driver_tag, type: string}
+- {alias: null, name: lease_no, type: bigint}
+- {alias: null, name: del_flag, type: int}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: aide_order__ao_order_driver
+timeField: create_time
+topic: DATA.AIDE_ORDER.AO_ORDER_DRIVER
+watermarkDelay: 1000

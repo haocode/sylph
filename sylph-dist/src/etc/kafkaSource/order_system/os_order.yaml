@@ -1,0 +1,33 @@
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+topic: DATA.ORDER_SYSTEM.OS_ORDER
+fieldSchemas:
+  - {name: order_no, type: bigint, alias: }
+  - {name: customer_no, type: bigint, alias: }
+  - {name: customer_device_id, type: string, alias: }
+  - {name: driver_no, type: bigint, alias: }
+  - {name: use_time, type: timestamp, alias: }
+  - {name: order_status, type: int, alias: }
+  - {name: order_type, type: int, alias: }
+  - {name: dispatch_type, type: int, alias: }
+  - {name: cost_city, type: string, alias: }
+  - {name: owner, type: int, alias: }
+  - {name: service_type, type: int, alias: }
+  - {name: real_service_type, type: int, alias: }
+  - {name: sms_notify, type: int, alias: }
+  - {name: biz, type: int, alias: }
+  - {name: origin, type: int, alias: }
+  - {name: sms_policy, type: int, alias: }
+  - {name: bill_fix_flag, type: int, alias: }
+  - {name: version, type: int, alias: }
+  - {name: fin_version, type: int, alias: }
+  - {name: group_no, type: bigint, alias: }
+  - {name: group_type, type: int, alias: }
+  - {name: create_time, type: timestamp, alias: }
+  - {name: update_time, type: timestamp, alias: }
+  - {name: _SCHEMA_NAME, type: string, alias: }
+  - {name: _TABLE_NAME, type: string, alias: }
+  - {name: _TABLE_OPERATE, type: string, alias: }
+processTimeMode: false
+timeField: update_time
+watermarkDelay: 1000
+flinkTableName: order_system.os_order

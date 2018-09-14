@@ -1,0 +1,21 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: order_no, type: bigint}
+- {alias: null, name: pay_method, type: int}
+- {alias: null, name: coupon_no, type: bigint}
+- {alias: null, name: discount_amount, type: int}
+- {alias: null, name: gratuity, type: int}
+- {alias: null, name: experience_fee, type: int}
+- {alias: null, name: balance_amount, type: int}
+- {alias: null, name: donate_amount, type: int}
+- {alias: null, name: online_pay_amount, type: int}
+- {alias: null, name: intimate_customer_no, type: bigint}
+- {alias: null, name: feature, type: string}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: boc__boc_checkout
+timeField: create_time
+topic: DATA.BOC.BOC_CHECKOUT
+watermarkDelay: 1000

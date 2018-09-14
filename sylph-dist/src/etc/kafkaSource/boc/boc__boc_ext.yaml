@@ -1,0 +1,65 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: order_no, type: bigint}
+- {alias: null, name: customer_no, type: bigint}
+- {alias: null, name: driver_no, type: bigint}
+- {alias: null, name: ext_order_id, type: string}
+- {alias: null, name: ext_uid, type: bigint}
+- {alias: null, name: service_way, type: int}
+- {alias: null, name: risk_state, type: int}
+- {alias: null, name: risk_time, type: timestamp}
+- {alias: null, name: risk_remove_time, type: timestamp}
+- {alias: null, name: is_lated, type: int}
+- {alias: null, name: is_real_arrived, type: int}
+- {alias: null, name: auto_payment_status, type: int}
+- {alias: null, name: customer_mp_type, type: int}
+- {alias: null, name: customer_app_version, type: string}
+- {alias: null, name: customer_mp_info, type: string}
+- {alias: null, name: count_person, type: int}
+- {alias: null, name: app_key, type: string}
+- {alias: null, name: owner, type: int}
+- {alias: null, name: situation_id, type: bigint}
+- {alias: null, name: situation_name, type: string}
+- {alias: null, name: rule_id, type: bigint}
+- {alias: null, name: rule_name, type: string}
+- {alias: null, name: total_reassign_fee, type: int}
+- {alias: null, name: reassign_share, type: string}
+- {alias: null, name: customer_lg, type: double}
+- {alias: null, name: customer_lt, type: double}
+- {alias: null, name: driver_receive_lg, type: double}
+- {alias: null, name: driver_receive_lt, type: double}
+- {alias: null, name: driver_service_lg, type: double}
+- {alias: null, name: driver_service_lt, type: double}
+- {alias: null, name: driver_arrived_lg, type: double}
+- {alias: null, name: driver_arrived_lt, type: double}
+- {alias: null, name: driver_time_lg, type: double}
+- {alias: null, name: driver_time_lt, type: double}
+- {alias: null, name: driver_over_lg, type: double}
+- {alias: null, name: driver_over_lt, type: double}
+- {alias: null, name: order_time, type: timestamp}
+- {alias: null, name: estimate_end_time, type: timestamp}
+- {alias: null, name: dispatch_time, type: timestamp}
+- {alias: null, name: received_time, type: timestamp}
+- {alias: null, name: start_service_time, type: timestamp}
+- {alias: null, name: arrived_time, type: timestamp}
+- {alias: null, name: reassign_time, type: timestamp}
+- {alias: null, name: get_on_time, type: timestamp}
+- {alias: null, name: get_off_time, type: timestamp}
+- {alias: null, name: check_out_time, type: timestamp}
+- {alias: null, name: evaluated_time, type: timestamp}
+- {alias: null, name: canceled_time, type: timestamp}
+- {alias: null, name: cost_id, type: bigint}
+- {alias: null, name: cost_name, type: string}
+- {alias: null, name: dept_id, type: bigint}
+- {alias: null, name: dept_name, type: string}
+- {alias: null, name: feature, type: string}
+- {alias: null, name: version, type: int}
+- {alias: null, name: del_flag, type: int}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: boc__boc_ext
+timeField: create_time
+topic: DATA.BOC.BOC_EXT
+watermarkDelay: 1000

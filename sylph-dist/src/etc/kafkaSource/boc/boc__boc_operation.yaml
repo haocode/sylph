@@ -1,0 +1,22 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: order_no, type: bigint}
+- {alias: null, name: source, type: int}
+- {alias: null, name: operator_type, type: bigint}
+- {alias: null, name: operator_no, type: bigint}
+- {alias: null, name: customer_no, type: bigint}
+- {alias: null, name: driver_no, type: bigint}
+- {alias: null, name: type, type: bigint}
+- {alias: null, name: operate_time, type: timestamp}
+- {alias: null, name: operation_log, type: string}
+- {alias: null, name: version, type: int}
+- {alias: null, name: feature, type: string}
+- {alias: null, name: del_flag, type: int}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: boc__boc_operation
+timeField: create_time
+topic: DATA.BOC.BOC_OPERATION
+watermarkDelay: 1000
