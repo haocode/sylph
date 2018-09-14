@@ -1,0 +1,19 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: action_no, type: bigint}
+- {alias: null, name: bean_id, type: string}
+- {alias: null, name: class_name, type: string}
+- {alias: null, name: method_name, type: string}
+- {alias: null, name: parameter_types, type: string}
+- {alias: null, name: arguments, type: string}
+- {alias: null, name: max_retry, type: int}
+- {alias: null, name: retry, type: int}
+- {alias: null, name: status, type: int}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: aide_order__ao_consistency_action
+timeField: create_time
+topic: DATA.AIDE_ORDER.AO_CONSISTENCY_ACTION
+watermarkDelay: 1000

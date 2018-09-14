@@ -1,0 +1,20 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: driver_no, type: bigint}
+- {alias: null, name: serial_no, type: string}
+- {alias: null, name: trade_no, type: string}
+- {alias: null, name: pay_time, type: timestamp}
+- {alias: null, name: amount, type: int}
+- {alias: null, name: pay_type, type: int}
+- {alias: null, name: status, type: int}
+- {alias: null, name: version, type: int}
+- {alias: null, name: remark, type: string}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+- {alias: null, name: type, type: int}
+flinkTableName: finance_center__fin_driver_recharge_log
+timeField: create_time
+topic: DATA.FINANCE_CENTER.FIN_DRIVER_RECHARGE_LOG
+watermarkDelay: 1000

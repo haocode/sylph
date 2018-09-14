@@ -1,0 +1,9 @@
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+topic: DATA.CARBON_CENTER.CM_CUSTOMER_CARBON
+fieldSchemas:
+  - {name: customer_no, type: bigint, alias: }
+  - {name: mileage, type: double, alias: }
+  - {name: value, type: bigint, alias: }
+  - {name: used_value, type: bigint, alias: }
+watermarkDelay: 1000
+flinkTableName: carbon_center.cm_customer_carbon

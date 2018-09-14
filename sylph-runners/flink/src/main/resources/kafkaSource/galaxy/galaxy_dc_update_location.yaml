@@ -1,0 +1,18 @@
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+topic: GALAXY_DC_UPDATE_LOCATION
+fieldSchemas:
+  - {name: driverNo, type: bigint, alias: driver_no}
+  - {name: h3No, type: bigint, alias: h3_no}
+  - {name: lng, type: double, alias: lng}
+  - {name: lat, type: double, alias: lat}
+  - {name: status, type: int, alias: status}
+  - {name: homeOrder, type: int, alias: home_order}
+  - {name: realOrder, type: int, alias: real_order}
+  - {name: vin, type: string, alias: vin}
+  - {name: carId, type: bigint, alias: car_id}
+  - {name: power, type: double, alias: power}
+  - {name: timestamp, type: timestamp, alias: ts}
+processTimeMode: false
+timeField: ts
+watermarkDelay: 1000
+flinkTableName: galaxy_dc_update_location

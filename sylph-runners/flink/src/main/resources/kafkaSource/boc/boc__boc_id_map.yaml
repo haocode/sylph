@@ -1,0 +1,13 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: order_no, type: bigint}
+- {alias: null, name: customer_no, type: bigint}
+- {alias: null, name: driver_no, type: bigint}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: boc__boc_id_map
+timeField: create_time
+topic: DATA.BOC.BOC_ID_MAP
+watermarkDelay: 1000

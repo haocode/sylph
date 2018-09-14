@@ -1,0 +1,10 @@
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+topic: DATA.FINANCE_CENTER.FIN_ACCOUNT_CHANGE_LOG
+fieldSchemas:
+  - {name: user_no, type: bigint, alias: }
+  - {name: donate_balance, type: bigint, alias: }
+  - {name: real_outlay, type: bigint, alias: }
+  - {name: donate_income, type: bigint, alias: }
+  - {name: donate_outlay, type: bigint, alias: }
+watermarkDelay: 1000
+flinkTableName: finance_center.fin_account_change_log
