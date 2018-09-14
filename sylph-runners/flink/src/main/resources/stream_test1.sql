@@ -9,7 +9,7 @@ create source table topic1(
 
 
 use table {"kafka.boc__boc_operat": {"name": "boc__boc_operation_scan","groupId": "boc","offsetStrategy": "latest"},
-"kafka.os_order_table": {"name": "boc__boc_operation_scan","groupId": "operation","offsetStrategy": "latest"}};
+"kafka.os__order_table": {"name": "boc__boc_operation_scan","groupId": "operation","offsetStrategy": "latest"}};
 
 
 use table {"kafka.boc__boc_operation": {"name": "boc__boc_operation_scan","groupId": "boc","offsetStrategy": "latest"},

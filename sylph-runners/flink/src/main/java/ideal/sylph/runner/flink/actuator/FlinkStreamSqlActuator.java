@@ -122,7 +122,7 @@ public class FlinkStreamSqlActuator
 //            Set<String> tableSet=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).flatMap
 //                    (sqlfile -> Arrays.stream(sqlfile.split("use table ")[1].split(","))).collect(Collectors.toSet());
 
-            Set<String> tableSet= Stream.of(sqlText).filter(sqlsplit -> sqlsplit.toLowerCase().contains("use table ")).map(
+            Set<String> tableSet= Stream.of(sqlSplit).filter(sql_split -> sql_split.toLowerCase().contains("use table ")).map(
                     sqlfile -> sqlfile.split("use table ")[1]).collect(Collectors.toSet());
 
             for (String table:tableSet) {

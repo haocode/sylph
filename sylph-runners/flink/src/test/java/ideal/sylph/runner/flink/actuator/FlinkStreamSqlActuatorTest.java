@@ -46,13 +46,18 @@ public class FlinkStreamSqlActuatorTest {
               StreamExecutionEnvironment execEnv = StreamExecutionEnvironment.createLocalEnvironment();
                StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(execEnv);
 
-            Set<String> tableSet= Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).map(sqlfile -> sqlfile.split("use table ")[1]).collect(Collectors.toSet());
+//            Set<String> tableSet= Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).map(sqlfile -> sqlfile.split("use table ")[1]).collect(Collectors.toSet());
+//
+//          Map <String,String> table_type =new HashMap<String,String>();
+//            for (String table:tableSet) {
+//               // String[] kv =table.split("\\.");
+//                JSONObject tablArray   =   JSONObject.parseObject(table);
 
-          Map <String,String> table_type =new HashMap<String,String>();
+            Set<String> tableSet= Stream.of(sqlSplit).filter(sqlsplit -> sqlsplit.toLowerCase().contains("use table ")).map(
+                    sqlfile -> sqlfile.split("use table ")[1]).collect(Collectors.toSet());
+
             for (String table:tableSet) {
-               // String[] kv =table.split("\\.");
                 JSONObject tablArray   =   JSONObject.parseObject(table);
-
                 tablArray.keySet().stream().forEach(System.out::println);
 
 
@@ -80,7 +85,7 @@ public class FlinkStreamSqlActuatorTest {
 
 
 
-                getSchema(properties,table_type);
+//                getSchema(properties,table_type);
 
 
 
