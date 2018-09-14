@@ -8,6 +8,6 @@ java -version
 
 ./gradlew -v
 
-./gradlew assemble test "$@"
+./gradlew assemble "$@"
 
 #./gradlew clean checkstyle assemble test "$@"
