@@ -15,6 +15,7 @@
  */
 package ideal.sylph.runner.flink.actuator;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
@@ -45,6 +46,8 @@ import org.apache.flink.table.functions.ScalarFunction;
 import org.apache.flink.table.functions.TableFunction;
 import org.apache.flink.table.functions.UserDefinedFunction;
 import org.fusesource.jansi.Ansi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 
@@ -68,6 +71,7 @@ public class FlinkStreamSqlActuator
     @Inject private FlinkYarnJobLauncher jobLauncher;
     @Inject private PipelinePluginManager pluginManager;
 
+    private static final Logger logger = LoggerFactory.getLogger(FlinkStreamSqlActuator.class);
 
     @Override
     public Flow formFlow(byte[] flowBytes)
@@ -115,26 +119,40 @@ public class FlinkStreamSqlActuator
         if(sqlText.toLowerCase().contains("use table ")){
 //            String[] tableArray=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).map(sql -> sql.split(
 //                    "use table")[0].split(",")).toArray(String[]::new);
-            Set<String> tableSet=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).flatMap
-                    (sqlfile -> Arrays.stream(sqlfile.split("use table ")[1].split(","))).collect(Collectors.toSet());
+//            Set<String> tableSet=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).flatMap
+//                    (sqlfile -> Arrays.stream(sqlfile.split("use table ")[1].split(","))).collect(Collectors.toSet());
 
-            Map <String,String> table_type =new HashMap<String,String>();
+            Set<String> tableSet= Stream.of(sqlText).filter(sqlsplit -> sqlsplit.toLowerCase().contains("use table ")).map(
+                    sqlfile -> sqlfile.split("use table ")[1]).collect(Collectors.toSet());
+
             for (String table:tableSet) {
-                String[] kv =table.split("\\.");
-                table_type.put(kv[1],kv[0]);
+                JSONObject tablArray   =   JSONObject.parseObject(table);
+                tablArray.keySet().stream().forEach(System.out::println);
+                for (String sourceName : tablArray.keySet()) {
+
+                    try {
+
+                        String[] kv =sourceName.split("\\.");
+                        logger.info("sourceName###"+sourceName);
+
+                        Optional<PipelinePluginManager.PipelinePluginInfo> pluginInfo = pluginManager.findPluginInfo(kv[0]);
+                        pluginInfo.ifPresent(plugin -> FileUtils
+                                .listFiles(plugin.getPluginFile(), null, true)
+                                .forEach(builder::add));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
-            for (String type :table_type.values()
-                 ) {
-                Optional<PipelinePluginManager.PipelinePluginInfo> pluginInfo = pluginManager.findPluginInfo(type);
-                pluginInfo.ifPresent(plugin -> FileUtils
-                        .listFiles(plugin.getPluginFile(), null, true)
-                        .forEach(builder::add));
-            }
 
 
-
-        }else{
+//            Map <String,String> table_type =new HashMap<String,String>();
+//            for (String table:tableSet) {
+//                String[] kv =table.split("\\.");
+//                table_type.put(kv[1],kv[0]);
+//            }
+   }else{
             Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("create ") && sql.toLowerCase().contains(" table "))
                     .map(parser::createStatement)
                     .filter(statement -> statement instanceof CreateStream)
