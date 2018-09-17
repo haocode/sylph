@@ -102,7 +102,6 @@ class StreamSqlBuilder
         }else if(sql.toLowerCase().contains("use ") && (sql.toLowerCase().contains(" table "))){
             try {
             Properties properties=new Properties();
-//
             properties.load(new FileInputStream("etc/conf.properties"));
             GlobalProp.setProperties(properties);
             Set<String> tableSet= Stream.of(sql).filter(sqlsplit -> sqlsplit.toLowerCase().contains("use table ")).map(

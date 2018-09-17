@@ -27,12 +27,11 @@ public class KafkaSourceUtil {
         InputStream in;
         String filePath;
         LOGGER.debug("kafkaSourceDirectory" + kafkaSourceDirectory);
-        filePath= kafkaSourceDirectory + File.separator + fileName;
+        filePath=kafkaSourceDirectory+File.separator +requireNonNull(fileName.split("__")[0],"kakfa 表名称使用不规范")+File.separator+ fileName;
         in= new FileInputStream(filePath);
         if (in == null) {
-            filePath=kafkaSourceDirectory+File.separator +requireNonNull(fileName.split("__")[0],"kakfa 表名称使用不规范")+File.separator+ fileName;
+            filePath= kafkaSourceDirectory + File.separator + fileName;
             in=new FileInputStream(filePath);
-
         }
         KafkaSourceSchema kafkaSourceSchema = YamlUtil.loadAs(in, KafkaSourceSchema.class, confProperties);
         in.close();
