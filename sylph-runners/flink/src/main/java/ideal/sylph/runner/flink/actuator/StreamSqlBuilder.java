@@ -46,6 +46,8 @@ import org.apache.flink.types.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.UnaryOperator;
@@ -100,7 +102,8 @@ class StreamSqlBuilder
         }else if(sql.toLowerCase().contains("use ") && (sql.toLowerCase().contains(" table "))){
             try {
             Properties properties=new Properties();
-            properties.load(KafkaSourceUtil.class.getClassLoader().getResourceAsStream("conf.properties"));
+//
+            properties.load(new FileInputStream("etc/conf.properties"));
             GlobalProp.setProperties(properties);
             Set<String> tableSet= Stream.of(sql).filter(sqlsplit -> sqlsplit.toLowerCase().contains("use table ")).map(
                     sqlfile -> sqlfile.split("use table ")[1]).collect(Collectors.toSet());
