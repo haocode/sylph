@@ -112,16 +112,10 @@ public class FlinkStreamSqlActuator
         ImmutableSet.Builder<File> builder = ImmutableSet.builder();
         SqlParser parser = new SqlParser();
                              //(?=pattern) 例如，'Windows (?=95|98|NT|2000)' 匹配"Windows 2000"中的"Windows"，
-        // 但不匹配"Windows 3.1"中的"Windows" $ 匹配输入字符串结尾的位置
         String[] sqlSplit = Stream.of(sqlText.split(";(?=([^\']*\'[^\']*\')*[^\']*$)"))
                 .filter(StringUtils::isNotBlank).toArray(String[]::new);
 
         if(sqlText.toLowerCase().contains("use table ")){
-//            String[] tableArray=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).map(sql -> sql.split(
-//                    "use table")[0].split(",")).toArray(String[]::new);
-//            Set<String> tableSet=Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("use table ")).flatMap
-//                    (sqlfile -> Arrays.stream(sqlfile.split("use table ")[1].split(","))).collect(Collectors.toSet());
-
             Set<String> tableSet= Stream.of(sqlSplit).filter(sql_split -> sql_split.toLowerCase().contains("use table ")).map(
                     sqlfile -> sqlfile.split("use table ")[1]).collect(Collectors.toSet());
 
@@ -133,7 +127,7 @@ public class FlinkStreamSqlActuator
                     try {
 
                         String[] kv =sourceName.split("\\.");
-                        logger.info("sourceName###"+sourceName);
+                        logger.info("sourceName#########"+sourceName);
 
                         Optional<PipelinePluginManager.PipelinePluginInfo> pluginInfo = pluginManager.findPluginInfo(kv[0]);
                         pluginInfo.ifPresent(plugin -> FileUtils
@@ -146,12 +140,6 @@ public class FlinkStreamSqlActuator
             }
 
 
-
-//            Map <String,String> table_type =new HashMap<String,String>();
-//            for (String table:tableSet) {
-//                String[] kv =table.split("\\.");
-//                table_type.put(kv[1],kv[0]);
-//            }
    }else{
             Stream.of(sqlSplit).filter(sql -> sql.toLowerCase().contains("create ") && sql.toLowerCase().contains(" table "))
                     .map(parser::createStatement)
@@ -204,8 +192,7 @@ public class FlinkStreamSqlActuator
                     execEnv.setParallelism(parallelism);
                     StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(execEnv);
                     // 根据注解注册udf函数
-//                      UdfFactory udfFactory = new UdfFactory();
-                    get_udf( tableEnv);
+                    get_udf(tableEnv);
                     StreamSqlBuilder streamSqlBuilder = new StreamSqlBuilder(tableEnv, pluginManager, new SqlParser());
                     Arrays.stream(sqlSplit).forEach(streamSqlBuilder::buildStreamBySql);
                     return execEnv.getStreamGraph().getJobGraph();
@@ -222,41 +209,6 @@ public class FlinkStreamSqlActuator
             throw new RuntimeException("StreamSql job build failed", e);
         }
     }
-
-
-//    private static JobGraph compile(
-//            String jobId,
-//            PipelinePluginManager pluginManager,
-//            int parallelism,
-//            String[] sqlSplit,
-//            Map<String,String> table_type,
-//            DirClassLoader jobClassLoader)
-//    {
-//        JVMLauncher<JobGraph> launcher = JVMLaunchers.<JobGraph>newJvm()
-//                .setConsole((line) -> System.out.println(new Ansi().fg(YELLOW).a("[" + jobId + "] ").fg(GREEN).a(line).reset()))
-//                .setCallable(() -> {
-//                    System.out.println("************ job start ***************");
-//                    StreamExecutionEnvironment execEnv = StreamExecutionEnvironment.createLocalEnvironment();
-//                    execEnv.setParallelism(parallelism);
-//                    StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(execEnv);
-//                    get_udf( tableEnv);
-//                    StreamSqlBuilder streamSqlBuilder = new StreamSqlBuilder(tableEnv, pluginManager, new SqlParser());
-//
-//                    Arrays.stream(sqlSplit).forEach(streamSqlBuilder::buildStreamBySql);
-//                    return execEnv.getStreamGraph().getJobGraph();
-//                })
-//                .addUserURLClassLoader(jobClassLoader)
-//                .build();
-//
-//        try {
-//            launcher.startAndGet(jobClassLoader);
-//            VmFuture<JobGraph> result = launcher.startAndGet(jobClassLoader);
-//            return result.get().orElseThrow(() -> new SylphException(JOB_BUILD_ERROR, result.getOnFailure()));
-//        }
-//        catch (IOException | JVMException | ClassNotFoundException e) {
-//            throw new RuntimeException("StreamSql job build failed", e);
-//        }
-//    }
 
     public static void get_udf(StreamTableEnvironment tableEnv){
         // 根据注解注册udf函数

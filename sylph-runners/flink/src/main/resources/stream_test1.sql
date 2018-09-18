@@ -13,7 +13,7 @@ use table {"kafka.boc__boc_operat": {"name": "boc__boc_operation_scan","groupId"
 
 
 use table {"kafka.boc__boc_operation": {"name": "boc__boc_operation_scan","groupId": "boc","offsetStrategy": "latest"},
-"kafka.os_order": {"name": "boc__boc_operation_scan","groupId": "operation","offsetStrategy": "latest"}};
+"kafka.boc__boc_order": {"groupId": "operation","offsetStrategy": "latest"}};
 
 -- 定义数据流输出位置
 create sink table print_table_sink(
