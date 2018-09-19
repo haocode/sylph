@@ -1,6 +1,7 @@
 package ideal.sylph.runner.flink.util;
 
 import org.apache.flink.streaming.connectors.kafka.Kafka010JsonTableSource;
+import org.apache.flink.streaming.connectors.kafka.Kafka010TableSource;
 import org.apache.flink.streaming.connectors.kafka.KafkaTableSource;
 import org.apache.flink.table.api.TableSchema;
 import org.apache.flink.table.api.TableSchemaBuilder;
@@ -78,6 +79,9 @@ public class KafkaSourceUtil {
                 tableSchemaBuilder.field(fieldSchema.getName(), fieldType.getType());
             }
         }
+
+
+//        new Kafka010TableSource(tableSchemaBuilder,kafkaSourceSchema.getTopic(),kafkaProps,deserializationSchema);
 
         Kafka010JsonTableSource.Builder kafkaJsonTableSourceBuilder = Kafka010JsonTableSource.builder();
         kafkaJsonTableSourceBuilder

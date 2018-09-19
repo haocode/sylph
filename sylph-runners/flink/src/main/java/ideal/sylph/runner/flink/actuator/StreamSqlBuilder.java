@@ -208,21 +208,21 @@ class StreamSqlBuilder
 
     private void createStreamTableAsSelect(CreateStreamAsSelect createStreamAsSelect)
     {
-        Table table = tableEnv.sqlQuery(createStreamAsSelect.getViewSql());
-        RowTypeInfo rowTypeInfo = (RowTypeInfo) table.getSchema().toRowType();
-
-        createStreamAsSelect.getWatermark().ifPresent(waterMark -> {
-            tableEnv.execEnv().setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-            DataStream<Row> inputStream = buildWaterMark(waterMark, rowTypeInfo, tableEnv.toAppendStream(table, Row.class));
-            String fields = String.join(",", ImmutableList.<String>builder()
-                    .add(rowTypeInfo.getFieldNames())
-                    .add(waterMark.getFieldForName() + ".rowtime")
-                    .build());
-            tableEnv.registerDataStream(createStreamAsSelect.getName(), inputStream, fields);
-        });
-        if (!createStreamAsSelect.getWatermark().isPresent()) {
-            tableEnv.registerTable(createStreamAsSelect.getName(), table);
-        }
+//        Table table = tableEnv.sqlQuery(createStreamAsSelect.getViewSql());
+//        RowTypeInfo rowTypeInfo = (RowTypeInfo) table.getSchema().toRowType();
+//
+//        createStreamAsSelect.getWatermark().ifPresent(waterMark -> {
+//            tableEnv.execEnv().setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+//            DataStream<Row> inputStream = buildWaterMark(waterMark, rowTypeInfo, tableEnv.toAppendStream(table, Row.class));
+//            String fields = String.join(",", ImmutableList.<String>builder()
+//                    .add(rowTypeInfo.getFieldNames())
+//                    .add(waterMark.getFieldForName() + ".rowtime")
+//                    .build());
+//            tableEnv.registerDataStream(createStreamAsSelect.getName(), inputStream, fields);
+//        });
+//        if (!createStreamAsSelect.getWatermark().isPresent()) {
+//            tableEnv.registerTable(createStreamAsSelect.getName(), table);
+//        }
     }
 
     private static RowTypeInfo parserColumns(List<ColumnDefinition> columns)
