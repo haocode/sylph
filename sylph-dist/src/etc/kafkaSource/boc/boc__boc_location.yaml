@@ -1,0 +1,45 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: order_no, type: bigint}
+- {alias: null, name: customer_no, type: bigint}
+- {alias: null, name: driver_no, type: bigint}
+- {alias: null, name: status, type: int}
+- {alias: null, name: start_lg, type: double}
+- {alias: null, name: real_start_lg, type: double}
+- {alias: null, name: start_lt, type: double}
+- {alias: null, name: real_start_lt, type: double}
+- {alias: null, name: start_city_code, type: string}
+- {alias: null, name: real_start_city_code, type: string}
+- {alias: null, name: start_district_code, type: string}
+- {alias: null, name: real_start_district_code, type: string}
+- {alias: null, name: start_district, type: string}
+- {alias: null, name: real_start_district, type: string}
+- {alias: null, name: start_addr, type: string}
+- {alias: null, name: real_start_addr, type: string}
+- {alias: null, name: start_fence_id, type: bigint}
+- {alias: null, name: end_lg, type: double}
+- {alias: null, name: real_end_lg, type: double}
+- {alias: null, name: end_lt, type: double}
+- {alias: null, name: real_end_lt, type: double}
+- {alias: null, name: end_city_code, type: string}
+- {alias: null, name: real_end_city_code, type: string}
+- {alias: null, name: end_district_code, type: string}
+- {alias: null, name: real_end_district_code, type: string}
+- {alias: null, name: end_district, type: string}
+- {alias: null, name: real_end_district, type: string}
+- {alias: null, name: end_addr, type: string}
+- {alias: null, name: real_end_addr, type: string}
+- {alias: null, name: end_fence_id, type: bigint}
+- {alias: null, name: sequence, type: int}
+- {alias: null, name: info, type: string}
+- {alias: null, name: version, type: int}
+- {alias: null, name: feature, type: string}
+- {alias: null, name: del_flag, type: int}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: boc__boc_location
+timeField: create_time
+topic: DATA.BOC.BOC_LOCATION
+watermarkDelay: 1000

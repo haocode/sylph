@@ -1,0 +1,13 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: driver_no, type: bigint}
+- {alias: null, name: aide_state, type: int}
+- {alias: null, name: del_flag, type: int}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: aide_order__ao_driver_config
+timeField: create_time
+topic: DATA.AIDE_ORDER.AO_DRIVER_CONFIG
+watermarkDelay: 1000

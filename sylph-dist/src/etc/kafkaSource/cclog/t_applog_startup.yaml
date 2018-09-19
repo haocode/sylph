@@ -1,0 +1,36 @@
+bootstrapServers: ${bigdata.clog.kafka.bootstrap.servers}
+topic: CCLOG_APPSTARTUP_PERFECT
+fieldSchemas:
+  - {name: shw, type: string, alias: }
+  - {name: app_version, type: string, alias: }
+  - {name: login_type, type: int, alias: }
+  - {name: useragent, type: string, alias: }
+  - {name: city_code, type: string, alias: }
+  - {name: battery, type: string, alias: }
+  - {name: platform, type: int, alias: }
+  - {name: launch_type, type: int, alias: }
+  - {name: uid, type: string, alias: }
+  - {name: remote_ip, type: string, alias: }
+  - {name: os_lang, type: string, alias: }
+  - {name: client_ip, type: string, alias: }
+  - {name: model, type: string, alias: }
+  - {name: phone_num, type: array<String>, alias: }
+  - {name: brand, type: string, alias: }
+  - {name: device_id, type: string, alias: }
+  - {name: os_version, type: string, alias: }
+  - {name: app_download_channel, type: string, alias: }
+  - {name: logic_type, type: int, alias: }
+  - {name: log_time, type: string, alias: }
+  - {name: wifi_name, type: string, alias: }
+  - {name: accepttime, type: string, alias: }
+  - {name: imei, type: string, alias: }
+  - {name: coordinate_lng, type: double, alias: }
+  - {name: coordinate_lat, type: double, alias: }
+  - {name: user_account, type: string, alias: }
+  - {name: app_list, type: array<string>, alias: }
+  - {name: network_type, type: int, alias: }
+  - {name: client_id, type: string, alias: }
+  - {name: params, type: map<string,string>, alias: }
+watermarkDelay: 1000
+flinkTableName: cclog.t_applog_startup
+

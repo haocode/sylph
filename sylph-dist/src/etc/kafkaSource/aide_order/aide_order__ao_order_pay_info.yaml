@@ -1,0 +1,28 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: order_no, type: bigint}
+- {alias: null, name: gratuity, type: int}
+- {alias: null, name: real_amount, type: int}
+- {alias: null, name: balance_amount, type: int}
+- {alias: null, name: balance_info, type: string}
+- {alias: null, name: coupon_no, type: bigint}
+- {alias: null, name: discount_amount, type: int}
+- {alias: null, name: coupon_discount_amount, type: int}
+- {alias: null, name: derate_amount, type: int}
+- {alias: null, name: cash_amount, type: int}
+- {alias: null, name: trade_no, type: string}
+- {alias: null, name: out_trade_no, type: string}
+- {alias: null, name: pay_method, type: int}
+- {alias: null, name: pay_account, type: string}
+- {alias: null, name: online_pay_amount, type: int}
+- {alias: null, name: experience_fee, type: int}
+- {alias: null, name: intimate_customer_no, type: bigint}
+- {alias: null, name: del_flag, type: int}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: aide_order__ao_order_pay_info
+timeField: create_time
+topic: DATA.AIDE_ORDER.AO_ORDER_PAY_INFO
+watermarkDelay: 1000

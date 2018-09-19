@@ -1,0 +1,32 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: order_no, type: bigint}
+- {alias: null, name: customer_no, type: bigint}
+- {alias: null, name: total_amount, type: int}
+- {alias: null, name: start_fee, type: int}
+- {alias: null, name: mileage_fee, type: int}
+- {alias: null, name: mileage, type: double}
+- {alias: null, name: travel_minute_fee, type: int}
+- {alias: null, name: travel_minute, type: int}
+- {alias: null, name: long_way_fee, type: int}
+- {alias: null, name: long_way, type: double}
+- {alias: null, name: night_fee, type: int}
+- {alias: null, name: extra_fee, type: int}
+- {alias: null, name: extra_info, type: string}
+- {alias: null, name: goods_fee, type: int}
+- {alias: null, name: goods_number, type: int}
+- {alias: null, name: park_fee, type: int}
+- {alias: null, name: high_speed_fee, type: int}
+- {alias: null, name: bridge_fee, type: int}
+- {alias: null, name: other_fee, type: int}
+- {alias: null, name: customer_type, type: int}
+- {alias: null, name: minimum_fee_diff, type: int}
+- {alias: null, name: del_flag, type: int}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: aide_order__ao_order_bill
+timeField: create_time
+topic: DATA.AIDE_ORDER.AO_ORDER_BILL
+watermarkDelay: 1000

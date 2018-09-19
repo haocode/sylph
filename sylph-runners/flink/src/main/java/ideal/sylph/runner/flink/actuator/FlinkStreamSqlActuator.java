@@ -15,6 +15,7 @@
  */
 package ideal.sylph.runner.flink.actuator;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
@@ -28,6 +29,7 @@ import ideal.sylph.parser.SqlParser;
 import ideal.sylph.parser.tree.CreateStream;
 import ideal.sylph.runner.flink.FlinkJobConfig;
 import ideal.sylph.runner.flink.FlinkJobHandle;
+import ideal.sylph.runner.flink.udf.UdfFactory;
 import ideal.sylph.spi.exception.SylphException;
 import ideal.sylph.spi.job.Flow;
 import ideal.sylph.spi.job.JobConfig;
@@ -39,7 +41,13 @@ import org.apache.flink.runtime.jobgraph.JobGraph;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.TableEnvironment;
 import org.apache.flink.table.api.java.StreamTableEnvironment;
+import org.apache.flink.table.functions.AggregateFunction;
+import org.apache.flink.table.functions.ScalarFunction;
+import org.apache.flink.table.functions.TableFunction;
+import org.apache.flink.table.functions.UserDefinedFunction;
 import org.fusesource.jansi.Ansi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -47,10 +55,7 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,6 +70,7 @@ import static org.fusesource.jansi.Ansi.Color.YELLOW;
 public class FlinkStreamSqlActuator
         extends FlinkStreamEtlActuator
 {
+    private static final Logger logger = LoggerFactory.getLogger(FlinkStreamSqlActuator.class);
     @Inject private PipelinePluginManager pluginManager;
 
     @NotNull
@@ -76,29 +82,59 @@ public class FlinkStreamSqlActuator
 
     @Nullable
     @Override
-    public Collection<File> parserFlowDepends(Flow inFlow)
-    {
+    public Collection<File> parserFlowDepends(Flow inFlow) {
         SqlFlow flow = (SqlFlow) inFlow;
         ImmutableSet.Builder<File> builder = ImmutableSet.builder();
         SqlParser parser = new SqlParser();
 
-        Stream.of(flow.getSqlSplit()).filter(sql -> sql.toLowerCase().contains("create ") && sql.toLowerCase().contains(" table "))
-                .map(parser::createStatement)
-                .filter(statement -> statement instanceof CreateStream)
-                .forEach(statement -> {
-                    CreateStream createTable = (CreateStream) statement;
-                    Map<String, String> withConfig = createTable.getProperties().stream()
-                            .collect(Collectors.toMap(
-                                    k -> k.getName().getValue(),
-                                    v -> v.getValue().toString().replace("'", ""))
-                            );
-                    String driverString = requireNonNull(withConfig.get("type"), "driver is null");
-                    Optional<PipelinePluginManager.PipelinePluginInfo> pluginInfo = pluginManager.findPluginInfo(driverString);
-                    pluginInfo.ifPresent(plugin -> FileUtils
-                            .listFiles(plugin.getPluginFile(), null, true)
-                            .forEach(builder::add));
-                });
-        return builder.build();
+
+        if (flow.sqlText.toLowerCase().contains("use table ")) {
+            Set<String> tableSet = Stream.of(flow.sqlText).filter(sql_split -> sql_split.toLowerCase().contains("use table ")).map(
+                    sqlfile -> sqlfile.split("use table ")[1]).collect(Collectors.toSet());
+
+            for (String table : tableSet) {
+                JSONObject tablArray = JSONObject.parseObject(table);
+                tablArray.keySet().stream().forEach(System.out::println);
+                for (String sourceName : tablArray.keySet()) {
+
+                    try {
+
+                        String[] kv = sourceName.split("\\.");
+                        logger.info("sourceName#########" + sourceName);
+
+                        Optional<PipelinePluginManager.PipelinePluginInfo> pluginInfo = pluginManager.findPluginInfo(kv[0]);
+                        pluginInfo.ifPresent(plugin -> FileUtils
+                                .listFiles(plugin.getPluginFile(), null, true)
+                                .forEach(builder::add));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return builder.build();
+        } else {
+
+
+            Stream.of(flow.getSqlSplit()).filter(sql -> sql.toLowerCase().contains("create ") && sql.toLowerCase().contains(" table "))
+                    .map(parser::createStatement)
+                    .filter(statement -> statement instanceof CreateStream)
+                    .forEach(statement -> {
+                        CreateStream createTable = (CreateStream) statement;
+                        Map<String, String> withConfig = createTable.getProperties().stream()
+                                .collect(Collectors.toMap(
+                                        k -> k.getName().getValue(),
+                                        v -> v.getValue().toString().replace("'", ""))
+                                );
+                        String driverString = requireNonNull(withConfig.get("type"), "driver is null");
+                        Optional<PipelinePluginManager.PipelinePluginInfo> pluginInfo = pluginManager.findPluginInfo(driverString);
+                        pluginInfo.ifPresent(plugin -> FileUtils
+                                .listFiles(plugin.getPluginFile(), null, true)
+                                .forEach(builder::add));
+                    });
+            return builder.build();
+        }
     }
 
     @NotNull
@@ -126,6 +162,7 @@ public class FlinkStreamSqlActuator
                     StreamExecutionEnvironment execEnv = StreamExecutionEnvironment.createLocalEnvironment();
                     execEnv.setParallelism(parallelism);
                     StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(execEnv);
+                    get_udf(tableEnv);
                     StreamSqlBuilder streamSqlBuilder = new StreamSqlBuilder(tableEnv, pluginManager, new SqlParser());
                     Arrays.stream(sqlSplit).forEach(streamSqlBuilder::buildStreamBySql);
                     return execEnv.getStreamGraph().getJobGraph();
@@ -167,5 +204,20 @@ public class FlinkStreamSqlActuator
         {
             return sqlText;
         }
+    }
+
+
+    public static void get_udf(StreamTableEnvironment tableEnv){
+        // 根据注解注册udf函数
+        for (Map.Entry<String, UserDefinedFunction> entry : UdfFactory.getUserDefinedFunctionHashMap().entrySet()) {
+            if (entry.getValue() instanceof TableFunction) {
+                tableEnv.registerFunction(entry.getKey(), (TableFunction) entry.getValue());
+            } else if (entry.getValue() instanceof AggregateFunction) {
+                tableEnv.registerFunction(entry.getKey(), (AggregateFunction) entry.getValue());
+            } else if (entry.getValue() instanceof ScalarFunction) {
+                tableEnv.registerFunction(entry.getKey(), (ScalarFunction) entry.getValue());
+            }
+        }
+
     }
 }

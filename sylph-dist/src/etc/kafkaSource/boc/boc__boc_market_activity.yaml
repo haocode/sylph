@@ -1,0 +1,21 @@
+!!com.caocao.archmage.flink.source.KafkaSourceSchema
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+fieldSchemas:
+- {alias: null, name: id, type: bigint}
+- {alias: null, name: order_no, type: bigint}
+- {alias: null, name: customer_no, type: bigint}
+- {alias: null, name: driver_no, type: bigint}
+- {alias: null, name: activity_id, type: bigint}
+- {alias: null, name: activity_type, type: int}
+- {alias: null, name: activity_param, type: string}
+- {alias: null, name: upper_amount, type: int}
+- {alias: null, name: activity_snapshot, type: string}
+- {alias: null, name: participate_in, type: int}
+- {alias: null, name: del_flag, type: int}
+- {alias: null, name: feature, type: string}
+- {alias: null, name: create_time, type: timestamp}
+- {alias: null, name: update_time, type: timestamp}
+flinkTableName: boc__boc_market_activity
+timeField: create_time
+topic: DATA.BOC.BOC_MARKET_ACTIVITY
+watermarkDelay: 1000

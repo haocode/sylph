@@ -26,6 +26,11 @@ dependencies {
     exclude(module: 'guava')
   }
 
+  compile group: 'org.apache.flink', name: 'flink-connector-kafka-0.10_2.11', version:deps.flink
+  compile 'com.alibaba:fastjson:1.2.8'
+
+  //udf
+  compile group: 'org.reflections', name: 'reflections', version: '0.9.9-RC1'
   //colour
   compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.17.1'
 

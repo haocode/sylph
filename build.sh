@@ -6,6 +6,15 @@
 #export PATH=$JAVA10_HOME/bin:$PATH
 java -version
 
-./gradlew -v
+#./gradlew -v
 
-./gradlew clean checkstyle licenseMain licenseTest assemble test "$@"
+git pull
+
+/home/admin/sylph/sylph-dist/build/bin/launcher stop
+
+./gradlew assemble "$@"
+
+/home/admin/sylph/sylph-dist/build/bin/launcher start
+
+
+#./gradlew clean checkstyle licenseMain licenseTest assemble test "$@"

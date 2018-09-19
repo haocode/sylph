@@ -9,7 +9,7 @@ allprojects{
 
     apply plugin: 'java'
     apply plugin: 'maven'
-    apply plugin: 'checkstyle'
+//    apply plugin: 'checkstyle'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -58,19 +58,19 @@ subprojects{
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.12'
     }
-
-    checkstyle {
-        toolVersion '8.11'
-        showViolations true
-    }
-
-    task checkstyle(type: Checkstyle) {
-        configFile = file("${rootProject.projectDir}/src/checkstyle/facebook_checks.xml")
-        source  'src'
-        include  '**/*.java'
-        exclude '**/gen/**', '**/test/**', '**/build/**', '**/module-info.java'
-        classpath = files()
-    }
+//
+//    checkstyle {
+//        toolVersion '8.11'
+//        showViolations true
+//    }
+//
+//    task checkstyle(type: Checkstyle) {
+//        configFile = file("${rootProject.projectDir}/src/checkstyle/facebook_checks.xml")
+//        source  'src'
+//        include  '**/*.java'
+//        exclude '**/gen/**', '**/test/**', '**/build/**', '**/module-info.java'
+//        classpath = files()
+//    }
 //    assemble.dependsOn 'checkstyle'
 
     /* 如果依赖版本冲突 则直接失败策略设置*/

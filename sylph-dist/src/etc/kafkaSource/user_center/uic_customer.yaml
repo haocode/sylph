@@ -1,0 +1,14 @@
+bootstrapServers: ${bigdata.kafka.bootstrap.servers}
+topic: DATA.USER_CENTER.UIC_CUSTOMER
+fieldSchemas:
+  - {name: customer_no, type: bigint, alias: }
+  - {name: phone, type: string, alias: }
+  - {name: status, type: int, alias: }
+  - {name: freeze_reason, type: string, alias: }
+  - {name: push_id, type: string, alias: }
+  - {name: client_id, type: string, alias: }
+  - {name: inviter, type: bigint, alias: }
+  - {name: invite_code, type: string, alias: }
+  - {name: vip_flag, type: int, alias: }
+watermarkDelay: 1000
+flinkTableName: user_center.uic_customer
