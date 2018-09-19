@@ -89,7 +89,7 @@ public class FlinkStreamSqlActuator
 
 
         if (flow.sqlText.toLowerCase().contains("use table ")) {
-            Set<String> tableSet = Stream.of(flow.sqlText).filter(sql_split -> sql_split.toLowerCase().contains("use table ")).map(
+            Set<String> tableSet = Stream.of(flow.getSqlSplit()).filter(sql_split -> sql_split.toLowerCase().contains("use table ")).map(
                     sqlfile -> sqlfile.split("use table ")[1]).collect(Collectors.toSet());
 
             for (String table : tableSet) {
